@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "4684512037",
+    "firebase_url": "https://cafem-80e6f-default-rtdb.firebaseio.com",
+    "project_id": "cafem-80e6f",
+    "storage_bucket": "cafem-80e6f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:4684512037:android:3615ebeff3b248a1abf8cc",
+        "android_client_info": {
+          "package_name": "com.pro.shopfee"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8YIIWfGAbeGsucX6PsTYWD8dSON4Jmn8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
