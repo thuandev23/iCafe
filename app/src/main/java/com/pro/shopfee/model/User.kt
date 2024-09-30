@@ -2,19 +2,50 @@ package com.pro.shopfee.model
 
 import com.google.gson.Gson
 
-class User {
-    var email: String? = null
-    var password: String? = null
-    var isAdmin = false
-
-    constructor()
-    constructor(email: String?, password: String?) {
-        this.email = email
-        this.password = password
+data class User(
+    var email: String? = null,
+    var password: String? = null,
+    var username: String? = null,
+    var phone: String? = null,
+    var address: String? = null,
+    var gender: String? = null,
+    var birthday: String? = null,
+    var isAdmin: Boolean = false,
+    var image: String? = null,
+    var longitude: Double? = null,
+    var latitude: Double? = null
+) {
+    // Convert object to JSON
+    fun toJSon(): String {
+        return Gson().toJson(this)
     }
 
-    fun toJSon(): String {
-        val gson = Gson()
-        return gson.toJson(this)
+    // Copy function with optional parameters
+    fun copyWith(
+        email: String? = this.email,
+        password: String? = this.password,
+        username: String? = this.username,
+        image: String? = this.image,
+        phone: String? = this.phone,
+        address: String? = this.address,
+        gender: String? = this.gender,
+        birthday: String? = this.birthday,
+        isAdmin: Boolean = this.isAdmin,
+        longitude: Double? = this.longitude,
+        latitude: Double? = this.latitude
+    ): User {
+        return this.copy(
+            email = email,
+            password = password,
+            username = username,
+            image = image,
+            phone = phone,
+            address = address,
+            gender = gender,
+            birthday = birthday,
+            isAdmin = isAdmin,
+            longitude = longitude,
+            latitude = latitude
+        )
     }
 }

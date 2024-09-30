@@ -17,7 +17,7 @@ import com.pro.shopfee.utils.GlobalFunction.callPhoneNumber
 
 class ContactActivity : BaseActivity() {
 
-    private var tvAboutUsTitle: TextView? = null
+        private var tvAboutUsTitle: TextView? = null
     private var tvAboutUsContent: TextView? = null
     private var tvAboutUsWebsite: TextView? = null
     private var layoutWebsite: LinearLayout? = null

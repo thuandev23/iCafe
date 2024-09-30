@@ -55,7 +55,7 @@
     <string name="msg_email_require">Vui lòng nhập email của bạn</string>
     <string name="msg_password_require">Vui lòng nhập mật khẩu của bạn</string>
     <string name="msg_email_invalid">Email của bạn không hợp lệ</string>
-    <string name="msg_email_invalid_admin">Email quản trị viên phải có định dạng …@admin.com</string>
+    <string name="msg_email_invalid_admin">Email quản trị viên sai định dạng</string>
     <string name="msg_email_invalid_user">Email người dùng sai định dạng</string>
 
     <string name="label_user_name">Email</string>
@@ -128,7 +128,8 @@
     <string name="label_tracking_order">Theo dõi đơn hàng</string>
     <string name="label_receipt_order">Hóa đơn</string>
 
-    <string name="label_shop_takes_order">Quán nhận được đơn hàng</string>
+    <string name="shop_confirm_order">Quán đang xác nhận đơn hàng</string>
+    <string name="label_shop_takes_order">Quán đã nhận đơn hàng</string>
     <string name="label_prepare_your_order">Chuẩn bị đơn hàng</string>
     <string name="label_order_complete">Đơn hàng của bạn đã hoàn tất, chúng tôi sẽ giao hàng ngay cho bạn</string>
     <string name="label_take_order">Nhận đơn hàng</string>
@@ -253,5 +254,34 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="text_choose_language">Chọn ngôn ngữ hiển thị</string>
+    <string name="txt_change_language">Bạn có chắc chắn muốn thay đổi ngôn ngữ không?</string>
+    <string name="txt_app_restart">Ứng dụng sẽ khởi động lại để áp dụng thay đổi.</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="info_user">Thông tin cá nhân</string>
+    <string name="gender">Hãy cập nhật giới tính</string>
+    <string name="address_user"> Hãy cập nhật địa chỉ</string>
+    <string name="birthday"> Hãy cập nhật sinh nhật</string>
+    <string name="phone_number_user">Hãy cập nhật số điện thoại</string>
+    <string name="email_user">Hãy cập nhật email</string>
+    <string name="update">Cập nhật</string>
+    <string name="hint_user_name">Nhập tên của bạn</string>
+    <string name="user_name">Tên của bạn</string>
+    <string name="msg_userName_require">Vui lòng nhập tên của bạn</string>
+    <string name="hello">Xin chào,</string>
+    <string name="icafe_new_drink_title">iCafe: Wow! Đồ uống mới !</string>
+    <string name="icafe_new_drink_desc">\%1$s\ mới đã được thêm vào. Kiểm tra nó ngay bây giờ!</string>
+    <string name="icafe_new_voucher_title">iCafe: Ê mã giảm giá mới kìa!</string>
+    <string name="icafe_new_voucher_desc">Giảm giá tới \%1$s\%% lận đó. Kiểm tra nó ngay bây giờ!</string>
+    <string name="notification">Thông báo</string>
+    <string name="label_cancel_order">Hủy đơn hàng</string>
+    <string name="icafe_new_order_title">iCafe: Ê đơn hàng mới kìa!</string>
+    <string name="icafe_new_order_desc">Đơn hàng mới của \%1$s\. Kiểm tra nó ngay bây giờ!</string>
+    <string name="your_address">Địa chỉ</string>
+    <string name="hint_user_address">Địa chỉ của bạn</string>
+    <string name="msg_address_require">Hãy nhập địa chỉ của bạn</string>
+    <string name="pick_your_location">Chọn vị trí</string>
+    <string name="msg_password_form">Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt</string>
 
 </resources>

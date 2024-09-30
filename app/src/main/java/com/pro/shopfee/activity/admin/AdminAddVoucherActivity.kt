@@ -2,15 +2,24 @@ package com.pro.shopfee.activity.admin
 
 import android.os.Bundle
 import android.widget.*
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.pro.shopfee.MyApplication
 import com.pro.shopfee.R
 import com.pro.shopfee.activity.BaseActivity
 import com.pro.shopfee.model.Voucher
+import com.pro.shopfee.notification.Notification
+import com.pro.shopfee.notification.NotificationApi
+import com.pro.shopfee.notification.NotificationData
 import com.pro.shopfee.utils.Constant
 import com.pro.shopfee.utils.GlobalFunction
 import com.pro.shopfee.utils.StringUtil.isEmpty
+import retrofit2.*
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.collections.set
 
 class AdminAddVoucherActivity : BaseActivity() {
@@ -106,6 +115,121 @@ class AdminAddVoucherActivity : BaseActivity() {
                     getString(R.string.msg_add_voucher_success),
                     Toast.LENGTH_SHORT
                 ).show()
+                sendNotificationToAll(strDiscount)
             }
     }
+
+    private fun sendNotificationToAll(nameCategory: String) {
+
+        getAllDeviceTokens { tokens ->
+            val userTokensMap = mutableMapOf<String, MutableList<String>>()
+
+            tokens.forEach { (userId, token) ->
+                userTokensMap.getOrPut(userId) { mutableListOf() }.add(token)
+            }
+
+            userTokensMap.forEach { (userId, userTokens) ->
+                userTokens.forEach { token ->
+                    sendNotificationToToken(token, nameCategory, userId)
+                }
+            }
+        }
+
+    }
+
+    private fun sendNotificationToToken(token: String, strNameCategory: String, userId: String) {
+        val data = hashMapOf(
+            "title" to (" 🎉 " + getString(R.string.icafe_new_voucher_title)),
+            "body" to getString(R.string.icafe_new_voucher_desc, strNameCategory)
+        )
+        val notification = Notification(
+            message = NotificationData(
+                token = token,
+                data = data
+            )
+        )
+
+        NotificationApi.create().sendNotification(notification).enqueue(
+            object : Callback<Notification> {
+                override fun onResponse(
+                    call: Call<Notification>,
+                    response: Response<Notification>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            this@AdminAddVoucherActivity,
+                            "Notification sent successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        val database = FirebaseDatabase.getInstance().getReference("notifications")
+                        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        val currentDate = dateFormat.format(Date())
+
+                        val notificationData = mapOf(
+                            "title" to data["title"],
+                            "body" to data["body"],
+                            "isRead" to false,
+                            "timestamp" to currentDate  // Store date as a formatted string
+                        )
+
+                        database.child("tokens").child(userId).child("notification").push()
+                            .setValue(notificationData).addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Toast.makeText(
+                                        this@AdminAddVoucherActivity,
+                                        "Notification saved for token $token",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        this@AdminAddVoucherActivity,
+                                        "Error saving notification for token $token",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+
+                    } else {
+                        Toast.makeText(
+                            this@AdminAddVoucherActivity,
+                            "Notification failed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Notification>, t: Throwable) {
+                    Toast.makeText(
+                        this@AdminAddVoucherActivity,
+                        "Failed to send notification",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        )
+    }
+
+    private fun getAllDeviceTokens(onComplete: (List<Pair<String, String>>) -> Unit) {
+        val database = FirebaseDatabase.getInstance().getReference("notifications").child("tokens")
+        database.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val tokens = task.result.children.mapNotNull { snapshot ->
+                    val email = snapshot.child("email").getValue(String::class.java)
+                    val userId = snapshot.child("userId").getValue(String::class.java)
+                    val token = snapshot.child("token").getValue(String::class.java)
+
+                    if (email != null && !email.endsWith(Constant.ADMIN_EMAIL_FORMAT) && userId != null && token != null) {
+                        Pair(userId, token) // Đảm bảo trả về Pair(userId, token)
+                    } else {
+                        null
+                    }
+                }
+                onComplete(tokens)
+            } else {
+                Toast.makeText(this, "Error retrieving tokens", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }

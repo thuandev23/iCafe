@@ -15,6 +15,7 @@ class AddressAdapter(
     private val listAddress: List<Address>?,
     private val iClickAddressListener: IClickAddressListener
 ) : RecyclerView.Adapter<AddressViewHolder>() {
+
     interface IClickAddressListener {
         fun onClickAddressItem(address: Address)
     }
@@ -30,15 +31,16 @@ class AddressAdapter(
         holder.tvName.text = address.name
         holder.tvPhone.text = address.phone
         holder.tvAddress.text = address.address
+        holder.tvLatitude.text = address.latitude?.toString()
+        holder.tvLongitude.text = address.longitude?.toString()
+
         if (address.isSelected) {
             holder.imgStatus.setImageResource(R.drawable.ic_item_selected)
         } else {
             holder.imgStatus.setImageResource(R.drawable.ic_item_unselect)
         }
         holder.layoutItem.setOnClickListener {
-            iClickAddressListener.onClickAddressItem(
-                address
-            )
+            iClickAddressListener.onClickAddressItem(address)
         }
     }
 
@@ -51,6 +53,8 @@ class AddressAdapter(
         val tvName: TextView
         val tvPhone: TextView
         val tvAddress: TextView
+        val tvLatitude: TextView
+        val tvLongitude: TextView
         val layoutItem: LinearLayout
 
         init {
@@ -58,6 +62,8 @@ class AddressAdapter(
             tvName = itemView.findViewById(R.id.tv_name)
             tvPhone = itemView.findViewById(R.id.tv_phone)
             tvAddress = itemView.findViewById(R.id.tv_address)
+            tvLatitude = itemView.findViewById(R.id.tv_latitude)
+            tvLongitude = itemView.findViewById(R.id.tv_longitude)
             layoutItem = itemView.findViewById(R.id.layout_item)
         }
     }

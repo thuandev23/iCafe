@@ -22,4 +22,6 @@ object Constant {
     const val KEY_INTENT_TOPPING_OBJECT = "color_object"
     const val KEY_INTENT_CATEGORY_OBJECT = "category_object"
     const val KEY_INTENT_DRINK_OBJECT = "drink_object"
+    const val KEY_INTENT_NOTIFICATION_OBJECT = "notification_object"
+    const val REQUEST_CODE_ADDRESS = 1001
 }

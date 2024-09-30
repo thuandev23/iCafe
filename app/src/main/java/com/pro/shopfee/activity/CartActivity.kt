@@ -42,7 +42,10 @@ class CartActivity : BaseActivity() {
     private var mAmount = 0
     private var paymentMethodSelected: PaymentMethod? = null
     private var addressSelected: Address? = null
+    private var latitudeAddress: Double? = 0.0
+    private var longitudeAddress: Double? = 0.0
     private var voucherSelected: Voucher? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,7 +140,9 @@ class CartActivity : BaseActivity() {
             orderBooking.total = mAmount
             orderBooking.paymentMethod = paymentMethodSelected!!.name
             orderBooking.address = addressSelected
-            orderBooking.status = Order.STATUS_NEW
+            orderBooking.latitude = latitudeAddress!!
+            orderBooking.longitude = longitudeAddress!!
+            orderBooking.status = Order.STATUS_CANCEL_OR_ACCEPT
             val bundle = Bundle()
             bundle.putSerializable(Constant.ORDER_OBJECT, orderBooking)
             startActivity(this@CartActivity, PaymentActivity::class.java, bundle)
@@ -218,6 +223,8 @@ class CartActivity : BaseActivity() {
     fun onAddressSelectedEvent(event: AddressSelectedEvent) {
         addressSelected = event.address
         tvAddress!!.text = addressSelected!!.address
+        latitudeAddress = event.lat
+        longitudeAddress = event.lng
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

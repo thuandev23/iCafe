@@ -5,6 +5,7 @@ import android.content.Context
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.pro.shopfee.prefs.DataStoreManager
 
 class MyApplication : Application() {
@@ -16,8 +17,11 @@ class MyApplication : Application() {
         FirebaseApp.initializeApp(this)
         mFirebaseDatabase = FirebaseDatabase.getInstance(FIREBASE_URL)
         DataStoreManager.init(applicationContext)
+        FirebaseMessaging.getInstance().subscribeToTopic("test")
     }
-
+    fun getUserDatabaseReference(): DatabaseReference? {
+        return mFirebaseDatabase?.getReference("users")
+    }
     fun getVoucherDatabaseReference(): DatabaseReference? {
         return mFirebaseDatabase?.getReference("voucher")
     }
@@ -56,7 +60,9 @@ class MyApplication : Application() {
     fun getOrderDetailDatabaseReference(orderId: Long): DatabaseReference? {
         return mFirebaseDatabase?.getReference("order/$orderId")
     }
-
+    fun getNotificationDatabaseReference(): DatabaseReference? {
+        return mFirebaseDatabase?.getReference("notifications")
+    }
     companion object {
         private const val FIREBASE_URL = "https://cafem-80e6f-default-rtdb.firebaseio.com"
         @JvmStatic

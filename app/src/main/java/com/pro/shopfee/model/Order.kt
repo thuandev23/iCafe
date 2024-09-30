@@ -16,6 +16,8 @@ class Order : Serializable {
     var rate = 0.0
     var review: String? = null
     var address: Address? = null
+    var latitude = 0.0
+    var longitude = 0.0
     val listDrinksName: String
         get() {
             if (drinks == null || drinks!!.isEmpty()) return ""
@@ -31,6 +33,7 @@ class Order : Serializable {
         }
 
     companion object {
+        const val STATUS_CANCEL_OR_ACCEPT = 0
         const val STATUS_NEW = 1
         const val STATUS_DOING = 2
         const val STATUS_ARRIVED = 3

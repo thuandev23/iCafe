@@ -1,16 +1,32 @@
 package com.pro.shopfee.activity.admin
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
+import android.os.StrictMode
+import android.util.Log
 import android.widget.*
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.pro.shopfee.MyApplication
 import com.pro.shopfee.R
 import com.pro.shopfee.activity.BaseActivity
 import com.pro.shopfee.model.Category
+import com.pro.shopfee.notification.AccessToken
+import com.pro.shopfee.notification.Notification
+import com.pro.shopfee.notification.NotificationApi
+import com.pro.shopfee.notification.NotificationData
 import com.pro.shopfee.utils.Constant
 import com.pro.shopfee.utils.GlobalFunction
 import com.pro.shopfee.utils.StringUtil.isEmpty
+import retrofit2.*
 import kotlin.collections.set
 
 class AdminAddCategoryActivity : BaseActivity() {
@@ -97,6 +113,9 @@ class AdminAddCategoryActivity : BaseActivity() {
                     getString(R.string.msg_add_category_success),
                     Toast.LENGTH_SHORT
                 ).show()
+                // send notification to all token user
+
             }
     }
+
 }

@@ -1,7 +1,11 @@
 package com.pro.shopfee.activity
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.MotionEvent
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -32,6 +36,10 @@ class AddressActivity : BaseActivity() {
     private var addressAdapter: AddressAdapter? = null
     private var addressSelectedId: Long = 0
     private var mValueEventListener: ValueEventListener? = null
+    private var latitude: Double? = 0.0
+    private var longitude: Double? = 0.0
+    private var address: String = ""
+    private var edtAddress: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +71,7 @@ class AddressActivity : BaseActivity() {
             listAddress,
             object : IClickAddressListener {
                 override fun onClickAddressItem(address: Address) {
-                    handleClickAddress(address)
+                    handleClickAddress(address, address.latitude!!, address.longitude!!)
                 }
             })
         rcvAddress.adapter = addressAdapter
@@ -116,8 +124,8 @@ class AddressActivity : BaseActivity() {
         }
     }
 
-    private fun handleClickAddress(address: Address) {
-        EventBus.getDefault().post(AddressSelectedEvent(address))
+    private fun handleClickAddress(address: Address, lat: Double, lng: Double) {
+        EventBus.getDefault().post(AddressSelectedEvent(address, lat, lng))
         finish()
     }
 
@@ -131,7 +139,7 @@ class AddressActivity : BaseActivity() {
         // init ui
         val edtName = viewDialog.findViewById<TextView>(R.id.edt_name)
         val edtPhone = viewDialog.findViewById<TextView>(R.id.edt_phone)
-        val edtAddress = viewDialog.findViewById<TextView>(R.id.edt_address)
+        edtAddress = viewDialog.findViewById<TextView>(R.id.edt_address)
         val tvCancel = viewDialog.findViewById<TextView>(R.id.tv_cancel)
         val tvAdd = viewDialog.findViewById<TextView>(R.id.tv_add)
 
@@ -140,12 +148,12 @@ class AddressActivity : BaseActivity() {
         tvAdd.setOnClickListener {
             val strName = edtName.text.toString().trim { it <= ' ' }
             val strPhone = edtPhone.text.toString().trim { it <= ' ' }
-            val strAddress = edtAddress.text.toString().trim { it <= ' ' }
+            val strAddress = edtAddress!!.text.toString().trim { it <= ' ' }
             if (isEmpty(strName) || isEmpty(strPhone) || isEmpty(strAddress)) {
                 showToastMessage(this, getString(R.string.message_enter_infor))
             } else {
                 val id = System.currentTimeMillis()
-                val address = Address(id, strName, strPhone, strAddress, user!!.email)
+                val address = Address(id, strName, strPhone, strAddress, user!!.email, latitude, longitude)
                 MyApplication[this].getAddressDatabaseReference()
                     ?.child(id.toString())
                     ?.setValue(address) { _: DatabaseError?, _: DatabaseReference? ->
@@ -158,9 +166,35 @@ class AddressActivity : BaseActivity() {
                     }
             }
         }
+        edtAddress!!.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                val drawableEnd = edtAddress!!.compoundDrawablesRelative[2]
+                if (drawableEnd != null && event.rawX >= (edtAddress!!.right - drawableEnd.bounds.width())) {
+                    val intent = Intent(this, MapsActivity::class.java)
+                    startActivityForResult(intent, Constant.REQUEST_CODE_ADDRESS)
+                    return@setOnTouchListener true
+                }
+            }
+            return@setOnTouchListener false
+        }
+        edtAddress!!.text = address
         bottomSheetDialog.show()
     }
-
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == Constant.REQUEST_CODE_ADDRESS && resultCode == Activity.RESULT_OK) {
+            data?.let {
+                latitude = it.getDoubleExtra("latitude", 0.0)
+                longitude = it.getDoubleExtra("longitude", 0.0)
+                address = it.getStringExtra("address") ?: ""
+                Log.d(
+                    "RegisterActivity",
+                    "Latitude: $latitude, Longitude: $longitude, Address: $address"
+                )
+                edtAddress!!.text= address
+            }
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         mValueEventListener?.let {

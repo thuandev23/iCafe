@@ -57,7 +57,7 @@
     <string name="msg_email_require">Please enter your email</string>
     <string name="msg_password_require">Please enter your password</string>
     <string name="msg_email_invalid">Your email is invalid</string>
-    <string name="msg_email_invalid_admin">Admin email must be in the format …@admin.com</string>
+    <string name="msg_email_invalid_admin">Admin email must be in wrong format</string>
     <string name="msg_email_invalid_user">User email is in the wrong format</string>
 
     <string name="label_user_name">Email</string>
@@ -135,6 +135,7 @@
     <string name="label_receipt_order">Receipt</string>
 
     <!-- Order Status -->
+    <string name="shop_confirm_order">Shop is confirming your order</string>
     <string name="label_shop_takes_order">Shop received your order</string>
     <string name="label_prepare_your_order">Preparing your order</string>
     <string name="label_order_complete">Your order is complete, we will deliver it soon</string>
@@ -261,4 +262,33 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="text_choose_language">Select a language</string>
+    <string name="txt_change_language">Do you want to change language?</string>
+    <string name="txt_app_restart">App restart required</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="info_user">Information of user</string>
+    <string name="gender">Please update gender</string>
+    <string name="address_user"> Please update address</string>
+    <string name="birthday"> Please update birthday</string>
+    <string name="phone_number_user"> Please update phone number</string>
+    <string name="email_user">Please update email</string>
+    <string name="update">Update</string>
+    <string name="hint_user_name">Enter your name</string>
+    <string name="user_name">Your name</string>
+    <string name="msg_userName_require">Please enter your name</string>
+    <string name="hello">Hello,</string>
+    <string name="icafe_new_drink_title">iCafe: New drink added!</string>
+    <string name="icafe_new_drink_desc">A new drink \%1$s\ has been added. Check it out now!</string>
+    <string name="icafe_new_voucher_title">iCafe: New voucher added!</string>
+    <string name="icafe_new_voucher_desc">Wow discount \%1$s\%%. Check it out now!</string>
+    <string name="notification">Notification</string>
+    <string name="label_cancel_order">Cancel Order</string>
+    <string name="icafe_new_order_title">iCafe: New order!</string>
+    <string name="icafe_new_order_desc">New order from \%1$s\. Check it out now!</string>
+    <string name="your_address">Your Address</string>
+    <string name="hint_user_address">Enter your address</string>
+    <string name="msg_address_require">Address invalid</string>
+    <string name="pick_your_location">Pick Your Location</string>
+    <string name="msg_password_form">Password must be at least 8 characters, contain at least 1 number and 1 special character</string>
 </resources>
