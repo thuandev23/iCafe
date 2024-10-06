@@ -5,6 +5,7 @@ import java.io.Serializable
 
 class Order : Serializable {
     var id: Long = 0
+    var userId: String? = null
     var userEmail: String? = null
     var dateTime: String? = null
     var drinks: List<DrinkOrder>? = null
@@ -13,6 +14,7 @@ class Order : Serializable {
     var total = 0
     var paymentMethod: String? = null
     var status = 0
+    var cancelReason: String? = null
     var rate = 0.0
     var review: String? = null
     var address: Address? = null
@@ -38,5 +40,6 @@ class Order : Serializable {
         const val STATUS_DOING = 2
         const val STATUS_ARRIVED = 3
         const val STATUS_COMPLETE = 4
+        const val STATUS_CANCEL = 5
     }
 }

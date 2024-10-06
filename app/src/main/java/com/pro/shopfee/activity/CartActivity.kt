@@ -1,24 +1,37 @@
 package com.pro.shopfee.activity
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.pro.shopfee.R
 import com.pro.shopfee.adapter.CartAdapter
 import com.pro.shopfee.adapter.CartAdapter.IClickCartListener
 import com.pro.shopfee.database.DrinkDatabase.Companion.getInstance
 import com.pro.shopfee.event.*
 import com.pro.shopfee.model.*
+import com.pro.shopfee.notification.Notification
+import com.pro.shopfee.notification.NotificationApi
+import com.pro.shopfee.notification.NotificationData
 import com.pro.shopfee.prefs.DataStoreManager.Companion.user
 import com.pro.shopfee.utils.Constant
 import com.pro.shopfee.utils.GlobalFunction.startActivity
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CartActivity : BaseActivity() {
 
@@ -45,8 +58,7 @@ class CartActivity : BaseActivity() {
     private var latitudeAddress: Double? = 0.0
     private var longitudeAddress: Double? = 0.0
     private var voucherSelected: Voucher? = null
-
-
+    private var userID = FirebaseAuth.getInstance().currentUser!!.uid
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
@@ -121,6 +133,7 @@ class CartActivity : BaseActivity() {
             }
             val orderBooking = Order()
             orderBooking.id = System.currentTimeMillis()
+            orderBooking.userId = userID
             orderBooking.userEmail = user!!.email
             orderBooking.dateTime = System.currentTimeMillis().toString()
             val drinks: MutableList<DrinkOrder> = ArrayList()
@@ -143,6 +156,8 @@ class CartActivity : BaseActivity() {
             orderBooking.latitude = latitudeAddress!!
             orderBooking.longitude = longitudeAddress!!
             orderBooking.status = Order.STATUS_CANCEL_OR_ACCEPT
+            orderBooking.cancelReason = ""
+            sendNotificationToAdmins(orderBooking.userEmail.toString())
             val bundle = Bundle()
             bundle.putSerializable(Constant.ORDER_OBJECT, orderBooking)
             startActivity(this@CartActivity, PaymentActivity::class.java, bundle)
@@ -242,7 +257,116 @@ class CartActivity : BaseActivity() {
     fun onOrderSuccessEvent(event: OrderSuccessEvent?) {
         finish()
     }
+    private fun sendNotificationToAdmins(name: String) {
+        getAllDeviceTokens { tokens ->
+            val userTokensMap = mutableMapOf<String, MutableList<String>>()
 
+            tokens.forEach { (userId, token) ->
+                userTokensMap.getOrPut(userId) { mutableListOf() }.add(token)
+            }
+
+            userTokensMap.forEach { (userId, userTokens) ->
+                userTokens.forEach { token ->
+                    sendNotificationToToken(token, name, userId)
+                }
+            }
+        }
+    }
+
+    private fun sendNotificationToToken(token: String, userEmail: String, adminId: String) {
+        val notificationData = hashMapOf(
+            "title" to (" 🎉 " + getString(R.string.icafe_new_order_title)),
+            "body" to getString(R.string.icafe_new_order_desc, userEmail)
+        )
+
+        val notification = Notification(
+            message = NotificationData(
+                token = token,
+                data = notificationData
+            )
+        )
+
+        NotificationApi.create().sendNotification(notification).enqueue(
+            object : Callback<Notification> {
+                override fun onResponse(
+                    call: Call<Notification>,
+                    response: Response<Notification>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            this@CartActivity,
+                            "Notification sent successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        val database = FirebaseDatabase.getInstance().getReference("notifications")
+                        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        val currentDate = dateFormat.format(Date())
+
+                        val notificationData = mapOf(
+                            "title" to notificationData["title"],
+                            "body" to notificationData["body"],
+                            "isRead" to false,
+                            "timestamp" to currentDate
+                        )
+                        database.child("tokens").child(adminId).child("notification").push()
+                            .setValue(notificationData).addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Toast.makeText(
+                                        this@CartActivity,
+                                        "Notification saved for token $token",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        this@CartActivity,
+                                        "Error saving notification for token $token",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                    } else {
+                        Toast.makeText(
+                            this@CartActivity,
+                            "Notification failed to send",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Notification>, t: Throwable) {
+                    Toast.makeText(
+                        this@CartActivity,
+                        "Failed to send notification",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        )
+    }
+
+
+    private fun getAllDeviceTokens(onComplete: (List<Pair<String, String>>) -> Unit) {
+        val database = FirebaseDatabase.getInstance().getReference("notifications").child("tokens")
+        database.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val tokens = task.result.children.mapNotNull { snapshot ->
+                    val email = snapshot.child("email").getValue(String::class.java)
+                    val adminId = snapshot.child("userId").getValue(String::class.java)
+                    val token = snapshot.child("token").getValue(String::class.java)
+
+                    if (email != null && email.endsWith(Constant.ADMIN_EMAIL_FORMAT) && adminId != null && token != null) {
+                        Pair(adminId, token)
+                    } else {
+                        null
+                    }
+                }
+                onComplete(tokens)
+            } else {
+                Toast.makeText(this, "Error retrieving tokens", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         if (EventBus.getDefault().isRegistered(this)) {

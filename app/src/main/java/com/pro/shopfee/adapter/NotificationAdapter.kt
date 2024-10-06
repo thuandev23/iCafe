@@ -13,7 +13,7 @@ import com.pro.shopfee.listener.IClickNotificationListener
 import com.pro.shopfee.model.Notification
 
 class NotificationAdapter(
-    private val listNotification: List<Notification>?,
+    private val listNotification: MutableList<Notification>?, // Ensure list is mutable for updating
     private val iClickNotificationListener: IClickNotificationListener
 ) : RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
 
@@ -26,16 +26,25 @@ class NotificationAdapter(
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
         val notification = listNotification!![position]
 
+        // Set data into views
         holder.title.text = notification.title
         holder.body.text = notification.body
         holder.time.text = notification.timestamp
-        holder.img_notification.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.colorPrimary))
+
+        if (notification.isRead == true) {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.red))
+            holder.img_notification.setColorFilter(Color.GRAY)
+        } else {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
+            holder.img_notification.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.colorPrimary))
+        }
 
         holder.itemView.setOnClickListener {
             iClickNotificationListener.onClickNotificationItem(notification)
+            notification.isRead = true
+            notifyItemChanged(position)
         }
     }
-
 
     override fun getItemCount(): Int {
         return listNotification?.size ?: 0

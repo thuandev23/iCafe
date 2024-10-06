@@ -1,6 +1,7 @@
 package com.pro.shopfee.fragment
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.pro.shopfee.activity.TrackingOrderActivity
 import com.pro.shopfee.adapter.OrderAdapter
 import com.pro.shopfee.adapter.OrderAdapter.IClickOrderListener
 import com.pro.shopfee.model.Order
+import com.pro.shopfee.model.Order.Companion.STATUS_CANCEL
 import com.pro.shopfee.model.TabOrder
 import com.pro.shopfee.prefs.DataStoreManager.Companion.user
 import com.pro.shopfee.utils.Constant
@@ -33,9 +35,7 @@ class OrderFragment : Fragment() {
     private var mOrderValueEventListener: ValueEventListener? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         mView = inflater.inflate(R.layout.fragment_order, container, false)
         loadDataArguments()
@@ -70,6 +70,19 @@ class OrderFragment : Fragment() {
                 bundle.putLong(Constant.ORDER_ID, order!!.id)
                 startActivity(activity!!, ReceiptOrderActivity::class.java, bundle)
             }
+
+            override fun onClickDialogCancelOrder(order: Order?) {
+                val dialogBuilder = AlertDialog.Builder(activity!!)
+                dialogBuilder.setTitle(getString(R.string.reasoncancel))
+                dialogBuilder.setMessage(order!!.cancelReason)
+
+                dialogBuilder.setPositiveButton(getString(R.string.action_ok)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+
+                val alert = dialogBuilder.create()
+                alert.show()
+            }
         })
         rcvOrder.adapter = orderAdapter
     }
@@ -90,11 +103,15 @@ class OrderFragment : Fragment() {
                     )
                     if (order != null) {
                         if (TabOrder.TAB_ORDER_PROCESS == orderTabType) {
-                            if (Order.STATUS_COMPLETE != order.status) {
+                            if (Order.STATUS_COMPLETE != order.status && STATUS_CANCEL != order.status) {
                                 listOrder!!.add(0, order)
                             }
                         } else if (TabOrder.TAB_ORDER_DONE == orderTabType) {
                             if (Order.STATUS_COMPLETE == order.status) {
+                                listOrder!!.add(0, order)
+                            }
+                        } else if (TabOrder.TAB_ORDER_CANCEL == orderTabType) {
+                            if (STATUS_CANCEL == order.status) {
                                 listOrder!!.add(0, order)
                             }
                         }
@@ -105,7 +122,7 @@ class OrderFragment : Fragment() {
 
             override fun onCancelled(error: DatabaseError) {}
         }
-        MyApplication[activity!!].getOrderDatabaseReference()
+        MyApplication[requireActivity()].getOrderDatabaseReference()
             ?.addValueEventListener(mOrderAllValueEventListener!!)
     }
 
@@ -125,11 +142,15 @@ class OrderFragment : Fragment() {
                     )
                     if (order != null) {
                         if (TabOrder.TAB_ORDER_PROCESS == orderTabType) {
-                            if (Order.STATUS_COMPLETE != order.status) {
+                            if (Order.STATUS_COMPLETE != order.status && STATUS_CANCEL != order.status) {
                                 listOrder!!.add(0, order)
                             }
                         } else if (TabOrder.TAB_ORDER_DONE == orderTabType) {
                             if (Order.STATUS_COMPLETE == order.status) {
+                                listOrder!!.add(0, order)
+                            }
+                        } else if (TabOrder.TAB_ORDER_CANCEL == orderTabType) {
+                            if (STATUS_CANCEL == order.status) {
                                 listOrder!!.add(0, order)
                             }
                         }
@@ -140,21 +161,21 @@ class OrderFragment : Fragment() {
 
             override fun onCancelled(error: DatabaseError) {}
         }
-        MyApplication[activity!!].getOrderDatabaseReference()
-            ?.orderByChild("userEmail")
-            ?.equalTo(user!!.email)
-            ?.addValueEventListener(mOrderValueEventListener!!)
+        MyApplication[requireActivity()].getOrderDatabaseReference()?.orderByChild("userEmail")
+            ?.equalTo(user!!.email)?.addValueEventListener(mOrderValueEventListener!!)
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         if (orderAdapter != null) orderAdapter!!.release()
         if (activity != null && mOrderAllValueEventListener != null) {
-            MyApplication[activity!!].getOrderDatabaseReference()
+            MyApplication[requireActivity()].getOrderDatabaseReference()
                 ?.removeEventListener(mOrderAllValueEventListener!!)
         }
         if (activity != null && mOrderValueEventListener != null) {
-            MyApplication[activity!!].getOrderDatabaseReference()
+            MyApplication[requireActivity()].getOrderDatabaseReference()
                 ?.removeEventListener(mOrderValueEventListener!!)
         }
     }

@@ -47,8 +47,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/app_name"
                     android:layout_marginStart="@dimen/define_dimen_5"
-                    android:textColor="@color/red"
-                    android:textSize="@dimen/text_size_xsmall" />
+                    android:textColor="@color/red" />
             </LinearLayout>
 
             <RelativeLayout
@@ -111,16 +110,16 @@
                     android:id="@+id/tv_success"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/label_success"
-                    android:textSize="@dimen/text_size_small"
-                    android:visibility="gone"
-                    android:textColor="@color/green"
+                    android:layout_centerVertical="true"
                     android:background="@drawable/bg_white_corner_6_border_green"
-                    android:paddingTop="@dimen/define_dimen_4"
-                    android:paddingBottom="@dimen/define_dimen_4"
                     android:paddingStart="@dimen/define_dimen_16"
+                    android:paddingTop="@dimen/define_dimen_4"
                     android:paddingEnd="@dimen/define_dimen_16"
-                    android:layout_centerVertical="true" />
+                    android:paddingBottom="@dimen/define_dimen_4"
+                    android:text="@string/label_success"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/text_size_small"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/layout_action"

@@ -3,23 +3,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/bgFilter"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/define_dimen_10"
-        android:text="Manage Drinks"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        tools:ignore="ContentDescription" />
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/define_dimen_10">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/define_dimen_10"
+            android:text="Manage Drinks"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/img_notification"
+            android:layout_width="@dimen/define_dimen_35"
+            android:layout_height="@dimen/define_dimen_35"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/define_dimen_10"
+            android:layout_marginEnd="@dimen/define_dimen_10"
+            android:src="@drawable/ic_notifications" />
+        <TextView
+            android:id="@+id/tv_notification_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/img_notification"
+            android:layout_alignTop="@+id/img_notification"
+            android:background="@drawable/notification_count_background"
+            android:gravity="center"
+            android:minWidth="16dp"
+            android:padding="2dp"
+            android:visibility="gone"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/bgFilter">
 
         <RelativeLayout
             android:id="@+id/layout_search"

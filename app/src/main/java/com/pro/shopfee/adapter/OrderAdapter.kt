@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.pro.shopfee.R
 import com.pro.shopfee.adapter.OrderAdapter.OrderViewHolder
@@ -24,6 +25,8 @@ class OrderAdapter(
     interface IClickOrderListener {
         fun onClickTrackingOrder(orderId: Long)
         fun onClickReceiptOrder(order: Order?)
+
+        fun onClickDialogCancelOrder(order: Order?)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderViewHolder {
@@ -59,6 +62,16 @@ class OrderAdapter(
                 iClickOrderListener.onClickReceiptOrder(
                     order
                 )
+            }
+        } else if (Order.STATUS_CANCEL == order.status) {
+            holder.tvSuccess.visibility = View.GONE
+            holder.tvAction.text = context!!.getString(R.string.reasoncancel)
+            holder.layoutReview.visibility = View.GONE
+            holder.layoutAction.setOnClickListener {
+                iClickOrderListener.onClickDialogCancelOrder(
+                    order
+                )
+
             }
         } else {
             holder.tvSuccess.visibility = View.GONE

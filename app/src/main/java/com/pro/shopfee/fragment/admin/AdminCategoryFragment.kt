@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -19,14 +20,19 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.pro.shopfee.MyApplication
 import com.pro.shopfee.R
 import com.pro.shopfee.activity.admin.AdminAddCategoryActivity
+import com.pro.shopfee.activity.admin.AdminChatActivity
 import com.pro.shopfee.activity.admin.AdminDrinkByCategoryActivity
+import com.pro.shopfee.activity.admin.AdminNotificationActivity
 import com.pro.shopfee.adapter.admin.AdminCategoryAdapter
 import com.pro.shopfee.listener.IOnAdminManagerCategoryListener
 import com.pro.shopfee.model.Category
@@ -46,6 +52,9 @@ class AdminCategoryFragment : Fragment() {
     private var edtSearchName: EditText? = null
     private var imgSearch: ImageView? = null
     private var btnAdd: FloatingActionButton? = null
+    private var notificationCount: TextView? = null
+    private var imgNotification: ImageView? = null
+    private var imgChat: ImageView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +66,7 @@ class AdminCategoryFragment : Fragment() {
         initView()
         initListener()
         loadListCategory("")
+        getUnreadNotificationCount()
         return mView
     }
 
@@ -64,6 +74,9 @@ class AdminCategoryFragment : Fragment() {
         edtSearchName = mView!!.findViewById(R.id.edt_search_name)
         imgSearch = mView!!.findViewById(R.id.img_search)
         btnAdd = mView!!.findViewById(R.id.btn_add)
+        notificationCount = mView!!.findViewById(R.id.tv_notification_count)
+        imgNotification = mView!!.findViewById(R.id.img_notification)
+        imgChat = mView!!.findViewById(R.id.img_chat)
     }
 
     private fun initView() {
@@ -118,22 +131,28 @@ class AdminCategoryFragment : Fragment() {
                 }
             }
         })
+        imgNotification!!.setOnClickListener {
+            startActivity(requireActivity(), AdminNotificationActivity::class.java)
+        }
+        imgChat!!.setOnClickListener {
+            startActivity(requireActivity(), AdminChatActivity::class.java)
+        }
     }
 
     private fun onClickAddCategory() {
-        startActivity(activity!!, AdminAddCategoryActivity::class.java)
+        startActivity(requireActivity(), AdminAddCategoryActivity::class.java)
     }
 
     private fun goToDrinkOfCategory(category: Category) {
         val bundle = Bundle()
         bundle.putSerializable(Constant.KEY_INTENT_CATEGORY_OBJECT, category)
-        startActivity(activity!!, AdminDrinkByCategoryActivity::class.java, bundle)
+        startActivity(requireActivity(), AdminDrinkByCategoryActivity::class.java, bundle)
     }
 
     private fun onClickEditCategory(category: Category) {
         val bundle = Bundle()
         bundle.putSerializable(Constant.KEY_INTENT_CATEGORY_OBJECT, category)
-        startActivity(activity!!, AdminAddCategoryActivity::class.java, bundle)
+        startActivity(requireActivity(), AdminAddCategoryActivity::class.java, bundle)
     }
 
     private fun deleteCategoryItem(category: Category) {
@@ -144,7 +163,7 @@ class AdminCategoryFragment : Fragment() {
                 if (activity == null) {
                     return@setPositiveButton
                 }
-                MyApplication[activity!!].getCategoryDatabaseReference()
+                MyApplication[requireActivity()].getCategoryDatabaseReference()
                     ?.child(category.id.toString())
                     ?.removeValue { _: DatabaseError?, _: DatabaseReference? ->
                         Toast.makeText(
@@ -162,11 +181,11 @@ class AdminCategoryFragment : Fragment() {
         val strKey = edtSearchName!!.text.toString().trim { it <= ' ' }
         resetListCategory()
         if (activity != null && mChildEventListener != null) {
-            MyApplication[activity!!].getCategoryDatabaseReference()
+            MyApplication[requireActivity()].getCategoryDatabaseReference()
                 ?.removeEventListener(mChildEventListener!!)
         }
         loadListCategory(strKey)
-        GlobalFunction.hideSoftKeyboard(activity!!)
+        GlobalFunction.hideSoftKeyboard(requireActivity())
     }
 
     private fun resetListCategory() {
@@ -230,14 +249,41 @@ class AdminCategoryFragment : Fragment() {
             override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
             override fun onCancelled(databaseError: DatabaseError) {}
         }
-        MyApplication[activity!!].getCategoryDatabaseReference()
+        MyApplication[requireActivity()].getCategoryDatabaseReference()
             ?.addChildEventListener(mChildEventListener!!)
     }
+    private fun getUnreadNotificationCount() {
+        val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
+        val databaseReference = FirebaseDatabase.getInstance()
+            .getReference("notifications/tokens/$currentUserId/notification")
+        databaseReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var unreadCount = 0
+                for (notificationSnapshot in snapshot.children) {
+                    val isRead = notificationSnapshot.child("isRead").getValue(Boolean::class.java) ?: true
+                    if (!isRead) {
+                        unreadCount++
+                    }
+                }
+                if (unreadCount > 0) {
+                    notificationCount?.text = "5"
+                    notificationCount?.visibility = View.VISIBLE
+                    notificationCount?.text = unreadCount.toString()
+                } else {
+                    notificationCount?.visibility = View.GONE
+                }
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+                // Xử lý lỗi nếu xảy ra
+                Log.e("Firebase", "Error retrieving notifications: ${error.message}")
+            }
+        })
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         if (activity != null && mChildEventListener != null) {
-            MyApplication[activity!!].getCategoryDatabaseReference()
+            MyApplication[requireActivity()].getCategoryDatabaseReference()
                 ?.removeEventListener(mChildEventListener!!)
         }
     }

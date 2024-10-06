@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="120dp"
+    app:cardCornerRadius="10dp"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="10dp"
+    app:cardBackgroundColor="@color/bgFilter"
+    tools:ignore="ExtraText">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_chat_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/define_dimen_5"
+            android:text="Hello, how are you?Hello, how are you?Hello, how are you?Hello, how are you?Hello, how are you?Hello, how are you?Hello, how are you?Hello, how are you?"
+            android:textColor="@color/quantum_grey900"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/iv_chat_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:adjustViewBounds="true"
+            android:paddingHorizontal="@dimen/define_dimen_10"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_launcher_background" />
+
+        <TextView
+            android:id="@+id/tv_chat_time"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginTop="@dimen/define_dimen_4"
+            android:text="dd/mm/yyyy hh:mm AM"
+
+            android:textColor="@color/quantum_grey900" />
+    </LinearLayout>
+    /
+</androidx.cardview.widget.CardView>

@@ -55,10 +55,10 @@ class NotificationActivity : BaseActivity() {
                         val databaseReference = FirebaseDatabase.getInstance()
                             .getReference("notifications/tokens/$currentUserId/notification/$notificationId")
 
-                        // Update isRead to true
                         databaseReference.child("isRead").setValue(true)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
+                                    loadNotifications()
                                     Toast.makeText(
                                         this@NotificationActivity,
                                         "Notification marked as read",
@@ -72,6 +72,7 @@ class NotificationActivity : BaseActivity() {
                                     ).show()
                                 }
                             }
+
                     }
                 }
             })
@@ -100,12 +101,18 @@ class NotificationActivity : BaseActivity() {
                     val notificationId = notificationSnapshot.key // Get notification ID
                     val notification = notificationSnapshot.getValue(Notification::class.java)
                     if (notification != null) {
-                        notification.notificationId =
-                            notificationId // Store notificationId in the object
+                        notification.notificationId =notificationId
                         mListNotification?.add(notification)
                     }
                 }
-                mNotificationAdapter?.notifyDataSetChanged()  // Refresh the RecyclerView adapter
+                if (mListNotification.isNullOrEmpty()) {
+                    findViewById<TextView>(R.id.tv_no_notifications).visibility = android.view.View.VISIBLE
+                    findViewById<RecyclerView>(R.id.rcv_data).visibility = android.view.View.GONE
+                } else {
+                    findViewById<TextView>(R.id.tv_no_notifications).visibility = android.view.View.GONE
+                    findViewById<RecyclerView>(R.id.rcv_data).visibility = android.view.View.VISIBLE
+                }
+                mNotificationAdapter?.notifyDataSetChanged()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

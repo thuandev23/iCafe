@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bgFilter">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/layout_toolbar" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <RelativeLayout
+            android:id="@+id/layout_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/define_dimen_10"
+            android:background="@drawable/bg_white_corner_6_border_gray"
+            android:padding="@dimen/define_dimen_2">
+
+            <EditText
+                android:id="@+id/edt_search_name_customer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/img_search"
+                android:background="@color/white"
+                android:hint="@string/type_name_to_search"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:padding="@dimen/define_dimen_6"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/text_size_small"
+                tools:ignore="Autofill" />
+
+            <ImageView
+                android:id="@+id/img_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/define_dimen_6"
+                android:src="@drawable/ic_search"
+                tools:ignore="ContentDescription" />
+
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_data_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/layout_search"
+            android:layout_margin="@dimen/define_dimen_10"
+            tools:listitem="@layout/row_chats"/>
+        <TextView
+            android:id="@+id/tv_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chưa có dữ liệu nào"
+            android:textSize="16sp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+
+</LinearLayout>

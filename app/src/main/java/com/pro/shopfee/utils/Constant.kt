@@ -24,4 +24,11 @@ object Constant {
     const val KEY_INTENT_DRINK_OBJECT = "drink_object"
     const val KEY_INTENT_NOTIFICATION_OBJECT = "notification_object"
     const val REQUEST_CODE_ADDRESS = 1001
+    const val CHAT_TAG = "chat_tag"
+    const val MESSAGE_TYPE_TEXT = "text"
+    const val MESSAGE_TYPE_IMAGE = "image"
+    const val MESSAGE_TYPE_LOCATION = "location"
+    const val MESSAGE_TYPE_FILE = "file"
+    const val MESSAGE_TYPE_CONTACT = "contact"
+    const val MESSAGE_TYPE_AUDIO = "audio"
 }

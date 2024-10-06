@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/bgFilter"
     android:orientation="vertical"
     tools:ignore="ContentDescription, UseCompoundDrawables">
 
@@ -64,13 +64,34 @@
             android:layout_height="1dp"
             android:layout_marginTop="@dimen/define_dimen_16"
             android:layout_marginBottom="@dimen/define_dimen_16"
-            android:background="@color/bgFilter" />
+            android:background="@color/colorPrimary" />
+        <LinearLayout
+            android:id="@+id/layout_chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/define_dimen_10"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_chat" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/define_dimen_10"
+                android:text="Chat with us"
+                android:textColor="@color/textColorHeading"
+                android:textSize="@dimen/text_size_small" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/layout_change_language"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/define_dimen_10"
+            android:layout_marginTop="@dimen/define_dimen_30"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 

@@ -269,7 +269,7 @@
     <string name="hint_user_name">Nhập tên của bạn</string>
     <string name="user_name">Tên của bạn</string>
     <string name="msg_userName_require">Vui lòng nhập tên của bạn</string>
-    <string name="hello">Xin chào,</string>
+    <string name="hello">Xin chào</string>
     <string name="icafe_new_drink_title">iCafe: Wow! Đồ uống mới !</string>
     <string name="icafe_new_drink_desc">\%1$s\ mới đã được thêm vào. Kiểm tra nó ngay bây giờ!</string>
     <string name="icafe_new_voucher_title">iCafe: Ê mã giảm giá mới kìa!</string>
@@ -277,11 +277,24 @@
     <string name="notification">Thông báo</string>
     <string name="label_cancel_order">Hủy đơn hàng</string>
     <string name="icafe_new_order_title">iCafe: Ê đơn hàng mới kìa!</string>
-    <string name="icafe_new_order_desc">Đơn hàng mới của \%1$s\. Kiểm tra nó ngay bây giờ!</string>
+    <string name="icafe_new_order_desc">Đơn hàng mới của \%1$s\ . Kiểm tra nó ngay bây giờ!</string>
     <string name="your_address">Địa chỉ</string>
     <string name="hint_user_address">Địa chỉ của bạn</string>
     <string name="msg_address_require">Hãy nhập địa chỉ của bạn</string>
     <string name="pick_your_location">Chọn vị trí</string>
     <string name="msg_password_form">Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt</string>
+    <string name="no_notification">Chưa có thông báo nào!</string>
+    <string name="msg_customer">Tin nhắn khách hàng</string>
+    <string name="type_name_to_search">Type name to search</string>
+    <string name="label_cancel">Hủy</string>
+    <string name="confirm_new_order">Xác nhận đơn hàng</string>
+    <string name="title_confirm_new_order">Bạn có muốn nhận đơn hàng này không?</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_cancel">Hủy đơn hàng</string>
+    <string name="hint_cancel_input">Nhập lý do hủy đơn hàng</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="enter_reasson">Vui lòng nhập lý do hủy đơn hàng</string>
+    <string name="reasoncancel">Lý do đơn hàng hủy</string>
+    <string name="no_have_address">Chưa có địa chỉ nào</string>
 
 </resources>

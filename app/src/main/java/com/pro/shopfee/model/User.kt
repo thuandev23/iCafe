@@ -13,7 +13,15 @@ data class User(
     var isAdmin: Boolean = false,
     var image: String? = null,
     var longitude: Double? = null,
-    var latitude: Double? = null
+    var latitude: Double? = null,
+    var uid: String? = null,
+    var online: String? = null,
+    var typingTo: String? = null,
+    var typing: String? = null,
+    var block: String? = null,
+    var onlineStatus: String? = null,
+    var typingStatus: String? = null,
+    var typingToStatus: String? = null
 ) {
     // Convert object to JSON
     fun toJSon(): String {
@@ -32,7 +40,15 @@ data class User(
         birthday: String? = this.birthday,
         isAdmin: Boolean = this.isAdmin,
         longitude: Double? = this.longitude,
-        latitude: Double? = this.latitude
+        latitude: Double? = this.latitude,
+        uid: String? = this.uid,
+        online: String? = this.online,
+        typingTo: String? = this.typingTo,
+        typing: String? = this.typing,
+        block: String? = this.block,
+        onlineStatus: String? = this.onlineStatus,
+        typingStatus: String? = this.typingStatus,
+        typingToStatus: String? = this.typingToStatus
     ): User {
         return this.copy(
             email = email,
@@ -45,7 +61,15 @@ data class User(
             birthday = birthday,
             isAdmin = isAdmin,
             longitude = longitude,
-            latitude = latitude
+            latitude = latitude,
+            uid = uid,
+            online = online,
+            typingTo = typingTo,
+            typing = typing,
+            block = block,
+            onlineStatus = onlineStatus,
+            typingStatus = typingStatus,
+            typingToStatus = typingToStatus
         )
     }
 }

@@ -34,8 +34,8 @@
     <!-- Custom Ratingbar -->
     <style name="ratingbar" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/bg_ratingbar</item>
-        <item name="android:minHeight">@dimen/define_dimen_22</item>
-        <item name="android:maxHeight">@dimen/define_dimen_22</item>
+        <item name="android:minHeight">@dimen/define_dimen_40</item>
+        <item name="android:maxHeight">@dimen/define_dimen_40</item>
         <item name="android:numStars">5</item>
         <item name="android:stepSize">0.5</item>
     </style>

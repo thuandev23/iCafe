@@ -62,6 +62,15 @@
             android:name=".activity.NotificationActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.admin.AdminNotificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.admin.AdminChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.RegisterActivity"
             android:exported="false" />
         <activity

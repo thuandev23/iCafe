@@ -1,5 +1,6 @@
 package com.pro.shopfee.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import com.pro.shopfee.activity.FeedbackActivity
 import com.pro.shopfee.activity.InfoUserActivity
 import com.pro.shopfee.activity.LoginActivity
 import com.pro.shopfee.activity.MainActivity
+import com.pro.shopfee.activity.ChatActivity
 import com.pro.shopfee.model.User
 import com.pro.shopfee.prefs.DataStoreManager.Companion.user
 import com.pro.shopfee.utils.GlobalFunction.startActivity
@@ -31,6 +33,7 @@ import com.pro.shopfee.utils.GlobalFunction.startActivity
 class AccountFragment : Fragment() {
 
     private var mView: View? = null
+    private var layoutChat: LinearLayout? = null
     private var layoutInfoUser: LinearLayout? = null
     private var layoutChangeLanguage: LinearLayout? = null
     private var layoutFeedback: LinearLayout? = null
@@ -83,6 +86,7 @@ class AccountFragment : Fragment() {
                 }
             })
         }
+        layoutChat = mView!!.findViewById(R.id.layout_chat)
         layoutChangeLanguage = mView!!.findViewById(R.id.layout_change_language)
         layoutFeedback = mView!!.findViewById(R.id.layout_feedback)
         layoutContact = mView!!.findViewById(R.id.layout_contact)
@@ -91,7 +95,18 @@ class AccountFragment : Fragment() {
         layoutInfoUser = mView!!.findViewById(R.id.layout_user_info)
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun initListener() {
+
+        layoutChat!!.setOnClickListener {
+            val bundle = Bundle()
+            val adminUid = "8MlQiotY10QoKR8bpBAoqW2rgBq1"
+
+                bundle.putString("receiptUid", adminUid)
+
+            startActivity(requireActivity(), ChatActivity::class.java, bundle)
+        }
+
         layoutChangeLanguage!!.setOnClickListener {
             startActivity(
                 requireActivity(), ChangeLanguageActivity::class.java

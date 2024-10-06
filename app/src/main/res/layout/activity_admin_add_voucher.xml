@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/bgFilter"
     android:orientation="vertical"
     tools:ignore="ContentDescription, Autofill, LabelFor">
 
@@ -74,7 +74,6 @@
                 android:inputType="number"
                 android:layout_toStartOf="@+id/tv_currency"
                 android:padding="@dimen/define_dimen_12"
-                android:text="0"
                 android:background="@color/transparent"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/text_size_small"

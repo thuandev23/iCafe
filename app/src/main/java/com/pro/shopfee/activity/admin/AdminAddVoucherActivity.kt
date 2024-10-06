@@ -220,7 +220,7 @@ class AdminAddVoucherActivity : BaseActivity() {
                     val token = snapshot.child("token").getValue(String::class.java)
 
                     if (email != null && !email.endsWith(Constant.ADMIN_EMAIL_FORMAT) && userId != null && token != null) {
-                        Pair(userId, token) // Đảm bảo trả về Pair(userId, token)
+                        Pair(userId, token)
                     } else {
                         null
                     }

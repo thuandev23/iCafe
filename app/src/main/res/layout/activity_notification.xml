@@ -1,19 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
+    android:background="@color/bgFilter"
     android:orientation="vertical">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/layout_toolbar" />
 
+    <TextView
+        android:id="@+id/tv_no_notifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_notification"
+        android:layout_marginTop="100dp"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/define_dimen_10"
-        tools:listitem="@layout/item_notification"/>
+        tools:listitem="@layout/item_notification"
+        />
 </LinearLayout>

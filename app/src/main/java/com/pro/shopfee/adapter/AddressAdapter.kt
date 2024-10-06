@@ -18,6 +18,7 @@ class AddressAdapter(
 
     interface IClickAddressListener {
         fun onClickAddressItem(address: Address)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressViewHolder {

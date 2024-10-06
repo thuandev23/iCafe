@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -19,13 +20,17 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.pro.shopfee.MyApplication
 import com.pro.shopfee.R
 import com.pro.shopfee.activity.admin.AdminAddDrinkActivity
+import com.pro.shopfee.activity.admin.AdminNotificationActivity
 import com.pro.shopfee.adapter.admin.AdminDrinkAdapter
 import com.pro.shopfee.listener.IOnAdminManagerDrinkListener
 import com.pro.shopfee.model.Drink
@@ -45,6 +50,8 @@ class AdminDrinkFragment : Fragment() {
     private var edtSearchName: EditText? = null
     private var imgSearch: ImageView? = null
     private var btnAdd: FloatingActionButton? = null
+    private var notificationCount: TextView? = null
+    private var imgNotification: ImageView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +63,7 @@ class AdminDrinkFragment : Fragment() {
         initView()
         initListener()
         loadListDrink("")
+        getUnreadNotificationCount()
         return mView
     }
 
@@ -63,6 +71,8 @@ class AdminDrinkFragment : Fragment() {
         edtSearchName = mView!!.findViewById(R.id.edt_search_name)
         imgSearch = mView!!.findViewById(R.id.img_search)
         btnAdd = mView!!.findViewById(R.id.btn_add)
+        notificationCount = mView!!.findViewById(R.id.tv_notification_count)
+        imgNotification = mView!!.findViewById(R.id.img_notification)
     }
 
     private fun initView() {
@@ -112,16 +122,19 @@ class AdminDrinkFragment : Fragment() {
                 }
             }
         })
+        imgNotification!!.setOnClickListener {
+            startActivity(requireActivity(), AdminNotificationActivity::class.java)
+        }
     }
 
     private fun onClickAddDrink() {
-        startActivity(activity!!, AdminAddDrinkActivity::class.java)
+        startActivity(requireActivity(), AdminAddDrinkActivity::class.java)
     }
 
     private fun onClickEditDrink(drink: Drink?) {
         val bundle = Bundle()
         bundle.putSerializable(Constant.KEY_INTENT_DRINK_OBJECT, drink)
-        startActivity(activity!!, AdminAddDrinkActivity::class.java, bundle)
+        startActivity(requireActivity(), AdminAddDrinkActivity::class.java, bundle)
     }
 
     private fun deleteDrinkItem(drink: Drink?) {
@@ -132,7 +145,7 @@ class AdminDrinkFragment : Fragment() {
                 if (activity == null) {
                     return@setPositiveButton
                 }
-                MyApplication[activity!!].getDrinkDatabaseReference()
+                MyApplication[requireActivity()].getDrinkDatabaseReference()
                     ?.child(drink!!.id.toString())
                     ?.removeValue { _: DatabaseError?, _: DatabaseReference? ->
                         Toast.makeText(
@@ -150,11 +163,11 @@ class AdminDrinkFragment : Fragment() {
         val strKey = edtSearchName!!.text.toString().trim { it <= ' ' }
         resetListDrink()
         if (activity != null && mChildEventListener != null) {
-            MyApplication[activity!!].getDrinkDatabaseReference()
+            MyApplication[requireActivity()].getDrinkDatabaseReference()
                 ?.removeEventListener(mChildEventListener!!)
         }
         loadListDrink(strKey)
-        GlobalFunction.hideSoftKeyboard(activity!!)
+        GlobalFunction.hideSoftKeyboard(requireActivity())
     }
 
     private fun resetListDrink() {
@@ -212,14 +225,40 @@ class AdminDrinkFragment : Fragment() {
             override fun onChildMoved(dataSnapshot: DataSnapshot, s: String?) {}
             override fun onCancelled(databaseError: DatabaseError) {}
         }
-        MyApplication[activity!!].getDrinkDatabaseReference()
+        MyApplication[requireActivity()].getDrinkDatabaseReference()
             ?.addChildEventListener(mChildEventListener!!)
     }
+    private fun getUnreadNotificationCount() {
+        val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
+        val databaseReference = FirebaseDatabase.getInstance()
+            .getReference("notifications/tokens/$currentUserId/notification")
+        databaseReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var unreadCount = 0
+                for (notificationSnapshot in snapshot.children) {
+                    val isRead = notificationSnapshot.child("isRead").getValue(Boolean::class.java) ?: true
+                    if (!isRead) {
+                        unreadCount++
+                    }
+                }
+                if (unreadCount > 0) {
+                    notificationCount?.visibility = View.VISIBLE
+                    notificationCount?.text = unreadCount.toString()
+                } else {
+                    notificationCount?.visibility = View.GONE
+                }
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+                // Xử lý lỗi nếu xảy ra
+                Log.e("Firebase", "Error retrieving notifications: ${error.message}")
+            }
+        })
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         if (activity != null && mChildEventListener != null) {
-            MyApplication[activity!!].getDrinkDatabaseReference()
+            MyApplication[requireActivity()].getDrinkDatabaseReference()
                 ?.removeEventListener(mChildEventListener!!)
         }
     }

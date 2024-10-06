@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- Toolbar for chat -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/chat_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/gradient_bg"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/define_dimen_10"
+        android:paddingEnd="@dimen/define_dimen_10"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <!-- Back button icon -->
+        <ImageView
+            android:id="@+id/img_toolbar_back_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:padding="@dimen/define_dimen_10"
+            android:src="@drawable/ic_arrow_back" />
+
+        <!-- User profile image -->
+        <ImageView
+            android:id="@+id/img_user_chat"
+            android:layout_width="@dimen/define_dimen_40"
+            android:layout_height="@dimen/define_dimen_40"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/profile"
+            tools:ignore="ContentDescription" />
+
+        <!-- Chat name or title -->
+        <TextView
+            android:id="@+id/tv_name_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:text="@string/app_name"
+            android:textSize="@dimen/text_size_xxnormal" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/chat_toolbar"
+        android:background="@color/quantum_grey400" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_chat_messages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@id/chat_input_container"
+        android:layout_below="@id/chat_toolbar"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/define_dimen_10"
+        android:paddingEnd="@dimen/define_dimen_10"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/row_chat_right"
+        />
+
+    <LinearLayout
+        android:id="@+id/chat_input_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/define_dimen_10"
+        android:paddingEnd="@dimen/define_dimen_10">
+
+        <EditText
+            android:id="@+id/et_chat_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/define_dimen_4"
+            android:layout_marginBottom="@dimen/define_dimen_4"
+            android:layout_weight="1"
+            android:background="@drawable/shape_edit_txt"
+            android:hint="Start typing..."
+            android:maxLines="5"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_normal" />
+        <ImageView
+            android:id="@+id/btn_picture_chat"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:padding="@dimen/define_dimen_5"
+            android:src="@drawable/ic_picture" />
+        <ImageView
+            android:id="@+id/btn_send_chat"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:padding="@dimen/define_dimen_5"
+            android:src="@drawable/ic_send" />
+    </LinearLayout>
+</RelativeLayout>

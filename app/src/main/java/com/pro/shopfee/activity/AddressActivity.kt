@@ -3,12 +3,17 @@ package com.pro.shopfee.activity
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -48,6 +53,7 @@ class AddressActivity : BaseActivity() {
         initToolbar()
         initUi()
         loadListAddressFromFirebase()
+        initSwipeToDelete()
     }
 
     private fun loadDataIntent() {
@@ -128,7 +134,79 @@ class AddressActivity : BaseActivity() {
         EventBus.getDefault().post(AddressSelectedEvent(address, lat, lng))
         finish()
     }
+    private fun initSwipeToDelete() {
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val address = listAddress?.get(position)
+                // Remove from Firebase
+                address?.let {
+                    showProgressDialog(true)
+                    MyApplication[this@AddressActivity].getAddressDatabaseReference()
+                        ?.child(it.id.toString())?.removeValue()
+                }
+                // Remove from the list and notify adapter
+                listAddress?.removeAt(position)
+                addressAdapter?.notifyItemRemoved(position)
+                showProgressDialog(false)
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val itemView = viewHolder.itemView
+                val background = ColorDrawable(Color.RED)
+
+                // Set the delete icon and scale it
+                val deleteIcon = ContextCompat.getDrawable(this@AddressActivity, R.drawable.ic_delete)!!
+
+                // Increase icon size by multiplying the original size (e.g., 1.5 times larger)
+                val scaleFactor = 1.5f
+                val intrinsicWidth = (deleteIcon.intrinsicWidth * scaleFactor).toInt()
+                val intrinsicHeight = (deleteIcon.intrinsicHeight * scaleFactor).toInt()
+
+                val iconMargin = (itemView.height - intrinsicHeight) / 2
+                val iconTop = itemView.top + (itemView.height - intrinsicHeight) / 2
+                val iconBottom = iconTop + intrinsicHeight
+
+                // Draw red background
+                if (dX > 0) { // Swiping to the right
+                    val iconLeft = itemView.left + iconMargin
+                    val iconRight = iconLeft + intrinsicWidth
+                    deleteIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                    background.setBounds(itemView.left, itemView.top, itemView.left + dX.toInt(), itemView.bottom)
+                } else if (dX < 0) { // Swiping to the left
+                    val iconLeft = itemView.right - iconMargin - intrinsicWidth
+                    val iconRight = itemView.right - iconMargin
+                    deleteIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                    background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                } else { // No swipe
+                    background.setBounds(0, 0, 0, 0)
+                }
+
+                background.draw(c)
+                deleteIcon.draw(c)
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(findViewById(R.id.rcv_address))
+    }
     @SuppressLint("InflateParams, MissingInflatedId")
     fun onClickAddAddress() {
         val viewDialog = layoutInflater.inflate(R.layout.layout_bottom_sheet_add_address, null)

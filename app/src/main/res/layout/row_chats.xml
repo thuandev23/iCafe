@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="5dp"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- User Image -->
+        <ImageView
+            android:id="@+id/img_customer_chat"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/profile"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="10dp" />
+
+        <!-- User Name -->
+        <TextView
+            android:id="@+id/tv_name_customer_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/img_customer_chat"
+            android:text="User Name"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true" />
+
+        <!-- Chat Message and Time in a horizontal LinearLayout -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/img_customer_chat"
+            android:layout_below="@id/tv_name_customer_chat"
+            android:orientation="horizontal">
+
+            <!-- Chat Message -->
+            <TextView
+                android:id="@+id/tv_chat_customer_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="This is a sample chat message.This is a sample chat message.This is a sample chat message."
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_weight="1"/>
+
+            <!-- Timestamp -->
+            <TextView
+                android:id="@+id/tv_chat_customer_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12:00 PM"
+                android:textSize="12sp"
+                android:layout_marginStart="10dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

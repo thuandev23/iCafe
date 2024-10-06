@@ -6,7 +6,9 @@ import android.text.TextWatcher
 import android.widget.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.pro.shopfee.R
+import com.pro.shopfee.utils.Constant
 import com.pro.shopfee.utils.StringUtil.isEmpty
 import com.pro.shopfee.utils.StringUtil.isValidEmail
 
@@ -72,9 +74,35 @@ class ForgotPasswordActivity : BaseActivity() {
                 getString(R.string.msg_email_invalid), Toast.LENGTH_SHORT
             ).show()
         } else {
-            resetPassword(strEmail)
+            fetchAllEmail(strEmail)
         }
     }
+    private fun fetchAllEmail(inputEmail: String) {
+        val database = FirebaseDatabase.getInstance().getReference("users")
+        database.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val snapshot = task.result
+                var emailFound = false
+                for (userSnapshot in snapshot.children) {
+                    val email = userSnapshot.child("email").getValue(String::class.java)
+                    if (email != null && email == inputEmail) {
+                        emailFound = true
+                        break
+                    }
+                }
+
+                if (emailFound) {
+                    resetPassword(inputEmail)
+                } else {
+                    Toast.makeText(this, "Email not found", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                // Task failed
+                Toast.makeText(this, "Error retrieving data", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 
     private fun resetPassword(email: String) {
         showProgressDialog(true)

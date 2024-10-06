@@ -1,12 +1,15 @@
 package com.pro.shopfee.activity
 
+import android.app.AlertDialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +36,9 @@ import com.pro.shopfee.map.DirectionsResponse
 import com.pro.shopfee.map.GoogleMapsApiService
 import com.pro.shopfee.model.Order
 import com.pro.shopfee.model.RatingReview
+import com.pro.shopfee.notification.Notification
+import com.pro.shopfee.notification.NotificationApi
+import com.pro.shopfee.notification.NotificationData
 import com.pro.shopfee.prefs.DataStoreManager.Companion.user
 import com.pro.shopfee.utils.Constant
 import com.pro.shopfee.utils.GlobalFunction.startActivity
@@ -41,6 +47,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.collections.set
 
 class TrackingOrderActivity : BaseActivity() {
@@ -63,6 +72,7 @@ class TrackingOrderActivity : BaseActivity() {
     private lateinit var googleMap: GoogleMap
     private var latitudeData: Double = 0.0
     private var longitudeData: Double = 0.0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tracking_order)
@@ -134,59 +144,55 @@ class TrackingOrderActivity : BaseActivity() {
             "${latitudeData},${longitudeData}",
             apiKey
         ).enqueue(object : Callback<DirectionsResponse> {
-                override fun onResponse(
-                    call: Call<DirectionsResponse>,
-                    response: Response<DirectionsResponse>
-                ) {
-                    val directionResponse = response.body()
-                    if (directionResponse != null && directionResponse.routes.isNotEmpty()) {
-                        val polyline = directionResponse.routes[0].overview_polyline.points
-                        val decodedPath = PolyUtil.decode(polyline)
-                        googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-                        googleMap.addPolyline(
-                            PolylineOptions().addAll(decodedPath).color(
-                                    ContextCompat.getColor(
-                                        this@TrackingOrderActivity,
-                                        R.color.colorPrimary
-                                    )
-                                ).width(10f)
-                        )
-                        googleMap.addMarker(
-                            MarkerOptions().position(originShop).title("Shop")
-                                .snippet(mOrder!!.address!!.address).icon(
-                                    BitmapDescriptorFactory.fromBitmap(
-                                        Bitmap.createScaledBitmap(
-                                            BitmapFactory.decodeResource(
-                                                resources,
-                                                R.drawable.profile
-                                            ), 80, 80, false
-                                        )
+            override fun onResponse(
+                call: Call<DirectionsResponse>, response: Response<DirectionsResponse>
+            ) {
+                val directionResponse = response.body()
+                if (directionResponse != null && directionResponse.routes.isNotEmpty()) {
+                    val polyline = directionResponse.routes[0].overview_polyline.points
+                    val decodedPath = PolyUtil.decode(polyline)
+                    googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+                    googleMap.addPolyline(
+                        PolylineOptions().addAll(decodedPath).color(
+                            ContextCompat.getColor(
+                                this@TrackingOrderActivity, R.color.colorPrimary
+                            )
+                        ).width(10f)
+                    )
+                    googleMap.addMarker(
+                        MarkerOptions().position(originShop).title("Shop")
+                            .snippet(mOrder!!.address!!.address).icon(
+                                BitmapDescriptorFactory.fromBitmap(
+                                    Bitmap.createScaledBitmap(
+                                        BitmapFactory.decodeResource(
+                                            resources, R.drawable.profile
+                                        ), 80, 80, false
                                     )
                                 )
-                        )
+                            )
+                    )
 
-                        googleMap.addMarker(
-                            MarkerOptions().position(LatLng(latitudeData, longitudeData))
-                                .title("Customer").snippet(adminAddress).icon(
-                                    BitmapDescriptorFactory.fromBitmap(
-                                        Bitmap.createScaledBitmap(
-                                            BitmapFactory.decodeResource(
-                                                resources,
-                                                R.drawable.profile
-                                            ), 80, 80, false
-                                        )
+                    googleMap.addMarker(
+                        MarkerOptions().position(LatLng(latitudeData, longitudeData))
+                            .title("Customer").snippet(adminAddress).icon(
+                                BitmapDescriptorFactory.fromBitmap(
+                                    Bitmap.createScaledBitmap(
+                                        BitmapFactory.decodeResource(
+                                            resources, R.drawable.profile
+                                        ), 80, 80, false
                                     )
                                 )
+                            )
 
-                        )
-                        zoomRoute(decodedPath)
-                    }
+                    )
+                    zoomRoute(decodedPath)
                 }
+            }
 
-                override fun onFailure(call: Call<DirectionsResponse>, t: Throwable) {
-                    showToastMessage("Failed to get directions")
-                }
-            })
+            override fun onFailure(call: Call<DirectionsResponse>, t: Throwable) {
+                showToastMessage("Failed to get directions")
+            }
+        })
     }
 
     private fun zoomRoute(route: List<LatLng>) {
@@ -213,13 +219,10 @@ class TrackingOrderActivity : BaseActivity() {
         tvTakeOrder = findViewById(R.id.tv_take_order_user)
         tvTakeOrderMessage = findViewById(R.id.tv_take_order_message)
         val layoutBottomUser = findViewById<LinearLayout>(R.id.layout_bottom_user)
-        val layoutBottomAdmin = findViewById<LinearLayout>(R.id.layout_bottom_admin)
         if (user!!.isAdmin) {
             layoutBottomUser.visibility = View.GONE
-            layoutBottomAdmin.visibility = View.VISIBLE
         } else {
             layoutBottomUser.visibility = View.VISIBLE
-            layoutBottomAdmin.visibility = View.GONE
         }
     }
 
@@ -235,7 +238,9 @@ class TrackingOrderActivity : BaseActivity() {
         }
         if (user!!.isAdmin) {
             imgStep0!!.setOnClickListener { updateStatusOrder(Order.STATUS_CANCEL_OR_ACCEPT) }
-            imgStep1!!.setOnClickListener { updateStatusOrder(Order.STATUS_NEW) }
+            imgStep1!!.setOnClickListener {
+                showReceiveOrderDialog(orderId)
+            }
             imgStep2!!.setOnClickListener { updateStatusOrder(Order.STATUS_DOING) }
             imgStep3!!.setOnClickListener { updateStatusOrder(Order.STATUS_ARRIVED) }
         } else {
@@ -247,6 +252,70 @@ class TrackingOrderActivity : BaseActivity() {
         tvTakeOrder!!.setOnClickListener {
             if (isOrderArrived) {
                 updateStatusOrder(Order.STATUS_COMPLETE)
+            }
+        }
+    }
+
+    private fun showReceiveOrderDialog(orderId: Long) {
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setTitle(getString(R.string.confirm_new_order))
+        dialogBuilder.setMessage(getString(R.string.title_confirm_new_order))
+
+        dialogBuilder.setPositiveButton(getString(R.string.yes)) { dialog, _ ->
+            updateStatusOrder(Order.STATUS_NEW)
+            dialog.dismiss()
+        }
+
+        dialogBuilder.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+            showCancelOrderReasonDialog(orderId)
+            dialog.dismiss()
+        }
+        val alert = dialogBuilder.create()
+        alert.show()
+    }
+
+    private fun showCancelOrderReasonDialog(orderId: Long) {
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setTitle(getString(R.string.title_cancel))
+
+        // Tạo EditText để admin nhập lý do
+        val input = EditText(this)
+        input.hint = getString(R.string.hint_cancel_input)
+        dialogBuilder.setView(input)
+
+        dialogBuilder.setPositiveButton(getString(R.string.confirm)) { dialog, _ ->
+            val reason = input.text.toString().trim()
+            if (reason.isNotEmpty()) {
+                cancelOrder(orderId, reason)
+            } else {
+                Toast.makeText(this, getString(R.string.enter_reasson), Toast.LENGTH_SHORT).show()
+            }
+            dialog.dismiss()
+        }
+
+        dialogBuilder.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val alert = dialogBuilder.create()
+        alert.show()
+    }
+
+    private fun cancelOrder(orderId: Long, reason: String) {
+        val orderRef =
+            FirebaseDatabase.getInstance().getReference("order").child(orderId.toString())
+        val updates = mapOf(
+            "status" to Order.STATUS_CANCEL, "cancelReason" to reason
+        )
+
+
+        orderRef.updateChildren(updates).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                finish()
+                if (user!!.isAdmin) {
+                sendNotificationCancelOrder(orderId.toString(),user!!.uid.toString())}
+            } else {
+                Toast.makeText(this, "Không thể hủy đơn hàng", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -295,6 +364,20 @@ class TrackingOrderActivity : BaseActivity() {
                 dividerStep0!!.setBackgroundColor(ContextCompat.getColor(this, R.color.green))
                 imgStep1!!.setImageResource(R.drawable.ic_step_enable)
                 dividerStep1!!.setBackgroundColor(ContextCompat.getColor(this, R.color.green))
+                imgStep2!!.setImageResource(R.drawable.ic_step_disable)
+                dividerStep2!!.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent))
+                imgStep3!!.setImageResource(R.drawable.ic_step_disable)
+                isOrderArrived = false
+                tvTakeOrder!!.setBackgroundResource(R.drawable.bg_button_disable_corner_16)
+                tvTakeOrderMessage!!.visibility = View.GONE
+
+            }
+
+            Order.STATUS_CANCEL -> {
+                imgStep0!!.setImageResource(R.drawable.ic_step_enable)
+                dividerStep0!!.setBackgroundColor(ContextCompat.getColor(this, R.color.red))
+                imgStep1!!.setImageResource(R.drawable.ic_cancel)
+                dividerStep1!!.setBackgroundColor(ContextCompat.getColor(this, R.color.red))
                 imgStep2!!.setImageResource(R.drawable.ic_step_disable)
                 dividerStep2!!.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent))
                 imgStep3!!.setImageResource(R.drawable.ic_step_disable)
@@ -356,4 +439,101 @@ class TrackingOrderActivity : BaseActivity() {
             MyApplication[this].getOrderDetailDatabaseReference(orderId)?.removeEventListener(it)
         }
     }
+    private fun sendNotificationCancelOrder(orderId: String, userId: String) {
+
+        getDeviceTokenForUser(userId) { token ->
+            if (token != null) {
+                // Gửi thông báo đến token này
+                    sendNotificationToToken(token, orderId, userId)
+                }
+            }
+    }
+
+    private fun sendNotificationToToken(token: String, orderId: String, userId: String) {
+        val data = hashMapOf(
+            "title" to (" 🎉 " + "Đơn hàng đã bị hủy"),
+            "body" to "Đơn hàng $orderId đã bị hủy"
+        )
+        val notification = Notification(
+            message = NotificationData(
+                token = token,
+                data = data
+            )
+        )
+
+        NotificationApi.create().sendNotification(notification).enqueue(
+            object : Callback<Notification> {
+                override fun onResponse(
+                    call: Call<Notification>,
+                    response: Response<Notification>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            this@TrackingOrderActivity,
+                            "Notification sent successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        val database = FirebaseDatabase.getInstance().getReference("notifications")
+                        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                        val currentDate = dateFormat.format(Date())
+
+                        val notificationData = mapOf(
+                            "title" to data["title"],
+                            "body" to data["body"],
+                            "isRead" to false,
+                            "timestamp" to currentDate  // Store date as a formatted string
+                        )
+
+                        database.child("tokens").child(userId).child("notification").push()
+                            .setValue(notificationData).addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Toast.makeText(
+                                        this@TrackingOrderActivity,
+                                        "Notification saved for token $token",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        this@TrackingOrderActivity,
+                                        "Error saving notification for token $token",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+
+                    } else {
+                        Toast.makeText(
+                            this@TrackingOrderActivity,
+                            "Notification failed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Notification>, t: Throwable) {
+                    Toast.makeText(
+                        this@TrackingOrderActivity,
+                        "Failed to send notification",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        )
+    }
+
+    private fun getDeviceTokenForUser(userId: String, onComplete: (String?) -> Unit) {
+        val database = FirebaseDatabase.getInstance().getReference("notifications").child("tokens")
+        database.child(userId).get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result.children.firstOrNull()?.child("token")?.getValue(String::class.java)
+                onComplete(token)
+            } else {
+                Toast.makeText(this, "Error retrieving token for user", Toast.LENGTH_SHORT).show()
+                onComplete(null)
+            }
+        }
+    }
+
+
 }

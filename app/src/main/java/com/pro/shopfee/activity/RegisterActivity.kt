@@ -283,8 +283,9 @@ class RegisterActivity : BaseActivity() {
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
                     if (user != null) {
-                        val userObjectSavePass = User( email= user.email, password =  password)
-                        val userObjectNotSavePass = User(email = user.email, username =  userName, password = password, address =  address,
+                        val userObjectSavePass = User(uid = user.uid, email= user.email)
+                        val userObjectNotSavePass = User( uid = user.uid, email = user.email,
+                            username =  userName, address =  address,
                             latitude = latitude, longitude =  longitude
                         )
 
@@ -309,11 +310,12 @@ class RegisterActivity : BaseActivity() {
     }
 
     private fun goToMainActivity() {
-        if (user!!.isAdmin) {
+       /* if (user!!.isAdmin) {
             startActivity(this, AdminMainActivity::class.java)
         } else {
             startActivity(this, LoginActivity::class.java)
-        }
+        }*/
+        startActivity(this, LoginActivity::class.java)
         finishAffinity()
     }
 }

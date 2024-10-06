@@ -39,7 +39,7 @@ class RatingReviewActivity : BaseActivity() {
 
     private fun initUi() {
         ratingBar = findViewById(R.id.ratingbar)
-        ratingBar?.rating = 5f
+        ratingBar?.rating = 6f
         edtReview = findViewById(R.id.edt_review)
         tvSendReview = findViewById(R.id.tv_send_review)
         val tvMessageReview = findViewById<TextView>(R.id.tv_message_review)

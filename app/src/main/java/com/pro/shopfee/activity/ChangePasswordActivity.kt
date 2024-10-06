@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.pro.shopfee.R
 import com.pro.shopfee.prefs.DataStoreManager
@@ -104,18 +105,32 @@ class ChangePasswordActivity : BaseActivity() {
     private fun changePassword(newPassword: String) {
         showProgressDialog(true)
         val user = FirebaseAuth.getInstance().currentUser ?: return
-        user.updatePassword(newPassword)
-            .addOnCompleteListener { task: Task<Void?> ->
+        val strOldPassword = edtOldPassword!!.text.toString().trim()
+        val credential = EmailAuthProvider.getCredential(user.email!!, strOldPassword)
+        user.reauthenticate(credential).addOnCompleteListener { authTask ->
+            if (authTask.isSuccessful) {
+                user.updatePassword(newPassword)
+                    .addOnCompleteListener { task: Task<Void?> ->
+                        showProgressDialog(false)
+                        if (task.isSuccessful) {
+                            showToastMessage(getString(R.string.msg_change_password_successfully))
+
+                            val userLogin = DataStoreManager.user
+                            userLogin!!.password = newPassword
+                            DataStoreManager.user = userLogin
+
+                            edtOldPassword!!.setText("")
+                            edtNewPassword!!.setText("")
+                            edtConfirmPassword!!.setText("")
+                        } else {
+                            showToastMessage("Error: " + task.exception!!.message)
+                        }
+                    }
+            } else {
                 showProgressDialog(false)
-                if (task.isSuccessful) {
-                    showToastMessage(getString(R.string.msg_change_password_successfully))
-                    val userLogin = DataStoreManager.user
-                    userLogin!!.password = newPassword
-                    DataStoreManager.user = userLogin
-                    edtOldPassword!!.setText("")
-                    edtNewPassword!!.setText("")
-                    edtConfirmPassword!!.setText("")
-                }
+                showToastMessage("Error: " + authTask.exception!!.message)
             }
+        }
     }
+
 }

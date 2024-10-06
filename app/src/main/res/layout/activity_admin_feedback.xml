@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/bgFilter">
 
     <include
         android:id="@+id/toolbar"
@@ -14,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/define_dimen_10"
-        android:layout_marginStart="@dimen/define_dimen_10"/>
+        android:layout_marginStart="@dimen/define_dimen_10"
+        tools:listitem="@layout/item_admin_feedback"/>
 
 </LinearLayout>

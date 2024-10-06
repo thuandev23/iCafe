@@ -16,7 +16,7 @@ class SplashActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         val handler = Handler(Looper.getMainLooper())
-        handler.postDelayed({ goToActivity() }, 2000)
+        handler.postDelayed({ goToActivity() }, 3000)
     }
 
     private fun goToActivity() {

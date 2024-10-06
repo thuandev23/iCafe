@@ -59,7 +59,6 @@ class InfoUserActivity : BaseActivity() {
                 .crop()
                 .compress(1024)
                 .maxResultSize(1080, 1080)
-
                 .start()
         }
 

@@ -321,7 +321,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/define_dimen_10"
-        android:background="@color/bgFilter"
+        android:background="@drawable/bg_cart_button"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="@dimen/define_dimen_10"
         android:layout_marginEnd="@dimen/define_dimen_10"

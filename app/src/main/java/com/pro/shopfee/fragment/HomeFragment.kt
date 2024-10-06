@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
     private var edtSearchName: EditText? = null
     private var imgSearch: ImageView? = null
     private var imgNotification: ImageView? = null
-    private var countNotification: TextView? = null
+    private var notificationCount: TextView? = null
     private var listDrinkFeatured: MutableList<Drink>? = null
     private var listCategory: MutableList<Category>? = null
     private var mCategoryValueEventListener: ValueEventListener? = null
@@ -94,7 +94,6 @@ class HomeFragment : Fragment() {
     private fun initUi() {
         val tvUsername = mView!!.findViewById<TextView>(R.id.tv_user_name)
         val imageUser = mView!!.findViewById<ImageView>(R.id.img_user_profile)
-
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId != null) {
             val userReference =
@@ -119,7 +118,7 @@ class HomeFragment : Fragment() {
         edtSearchName = mView!!.findViewById(R.id.edt_search_name)
         imgSearch = mView!!.findViewById(R.id.img_search)
         imgNotification = mView!!.findViewById(R.id.img_notification)
-        //countNotification = mView!!.findViewById(R.id.tv_notification_count)
+        notificationCount = mView!!.findViewById(R.id.tv_notification_count)
     }
 
     private fun initListener() {
@@ -147,32 +146,35 @@ class HomeFragment : Fragment() {
     }
 
     private fun getUnreadNotificationCount() {
-        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
         val databaseReference = FirebaseDatabase.getInstance()
             .getReference("notifications/tokens/$currentUserId/notification")
-
         databaseReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var unreadCount = 0
-                val notifications = mutableListOf<Notification>()
-                for (dataSnapshot in snapshot.children) {
-                    val notification = dataSnapshot.getValue(Notification::class.java)
-                    notification?.let {
-                        notifications.add(it)
-                        if (it.isRead == false) {
-                            unreadCount++
-                        }
+                for (notificationSnapshot in snapshot.children) {
+                    val isRead = notificationSnapshot.child("isRead").getValue(Boolean::class.java) ?: true
+                    if (!isRead) {
+                        unreadCount++
                     }
                 }
-                countNotification?.text = unreadCount.toString()
-
+                if (unreadCount > 0) {
+                    notificationCount?.text = "5"
+                    notificationCount?.visibility = View.VISIBLE
+                    notificationCount?.text = unreadCount.toString()
+                } else {
+                    notificationCount?.visibility = View.GONE
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Handle error if needed
+                // Xử lý lỗi nếu xảy ra
+                Log.e("Firebase", "Error retrieving notifications: ${error.message}")
             }
         })
     }
+
+
 
     private fun loadImageFromFirebaseStorage(imagePath: String, imageUser: ImageView) {
         val storageRef = FirebaseStorage.getInstance().getReference(imagePath)
@@ -214,10 +216,10 @@ class HomeFragment : Fragment() {
             )
         )
 
-        // show data
-        val recyclerView = mView?.findViewById<RecyclerView>(R.id.rv_news)
+        // show data news
+        /*val recyclerView = mView?.findViewById<RecyclerView>(R.id.rv_news)
         recyclerView?.layoutManager = GridLayoutManager(activity, 1)
-        recyclerView?.adapter = NewsAdapter(listNews)
+        recyclerView?.adapter = NewsAdapter(listNews)*/
 
     }
 

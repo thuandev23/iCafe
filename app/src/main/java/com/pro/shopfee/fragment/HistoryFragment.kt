@@ -56,9 +56,10 @@ class HistoryFragment : Fragment() {
         val list: MutableList<TabOrder> = ArrayList()
         list.add(TabOrder(TabOrder.TAB_ORDER_PROCESS, getString(R.string.label_process)))
         list.add(TabOrder(TabOrder.TAB_ORDER_DONE, getString(R.string.label_done)))
+        list.add(TabOrder(TabOrder.TAB_ORDER_CANCEL, getString(R.string.label_cancel)))
         if (activity == null) return
         viewPagerOrder!!.offscreenPageLimit = list.size
-        val adapter = OrderPagerAdapter(activity!!, list)
+        val adapter = OrderPagerAdapter(requireActivity(), list)
         viewPagerOrder!!.adapter = adapter
         TabLayoutMediator(
             tabOrder!!, viewPagerOrder!!
