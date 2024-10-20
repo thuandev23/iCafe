@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#5D4037</color>
     <color name="colorPrimaryDark">#5D4037</color>
+    <color name="colorSecondary">#936956</color>
     <color name="colorAccent">#CACACA</color>
 
     <color name="textColorPrimary">#5D4037</color>

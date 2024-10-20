@@ -47,7 +47,7 @@
             android:layout_marginStart="@dimen/define_dimen_5"
             android:textSize="@dimen/define_dimen_16"
             android:textStyle="bold"
-            android:text="Nguyen Van Thuan"/>
+            android:text="@string/anonymous"/>
     </LinearLayout>
 
     <ImageView

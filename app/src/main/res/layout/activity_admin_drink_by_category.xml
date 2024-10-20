@@ -15,7 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/define_dimen_10"
-
         android:layout_marginBottom="@dimen/define_dimen_10"
         tools:listitem="@layout/item_admin_category"/>
 </LinearLayout>

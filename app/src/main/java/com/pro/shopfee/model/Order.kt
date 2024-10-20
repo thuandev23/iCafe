@@ -20,6 +20,7 @@ class Order : Serializable {
     var address: Address? = null
     var latitude = 0.0
     var longitude = 0.0
+    var fee = 0
     val listDrinksName: String
         get() {
             if (drinks == null || drinks!!.isEmpty()) return ""

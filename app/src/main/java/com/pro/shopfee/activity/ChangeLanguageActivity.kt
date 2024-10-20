@@ -10,11 +10,14 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.pro.shopfee.R
+import kotlinx.android.synthetic.main.activity_change_language.btn_change_language_ko
 import java.util.Locale
 
 class ChangeLanguageActivity : AppCompatActivity() {
     private var btnChangeLanguageVn: LinearLayout? = null
     private var btnChangeLanguageEn: LinearLayout? = null
+    private var btnChangeLanguageKo: LinearLayout? = null
+    private var btnChangeLanguageJp: LinearLayout? = null
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,12 +41,20 @@ class ChangeLanguageActivity : AppCompatActivity() {
     private fun initListener() {
         btnChangeLanguageVn = findViewById<LinearLayout>(R.id.btn_change_language_vn)
         btnChangeLanguageEn = findViewById<LinearLayout>(R.id.btn_change_language_en)
+        btnChangeLanguageKo = findViewById<LinearLayout>(R.id.btn_change_language_ko)
+        btnChangeLanguageJp = findViewById<LinearLayout>(R.id.btn_change_language_jp)
 
         btnChangeLanguageVn!!.setOnClickListener {
             confirmLanguageChange("vi")
         }
         btnChangeLanguageEn!!.setOnClickListener {
             confirmLanguageChange("en")
+        }
+        btnChangeLanguageKo!!.setOnClickListener {
+            confirmLanguageChange("ko")
+        }
+        btnChangeLanguageJp!!.setOnClickListener {
+            confirmLanguageChange("ja")
         }
     }
 

@@ -30,6 +30,7 @@ class ReceiptOrderActivity : BaseActivity() {
     private var tvPhone: TextView? = null
     private var tvAddress: TextView? = null
     private var tvTrackingOrder: TextView? = null
+    private var tvFee: TextView? = null
     private var orderId: Long = 0
     private var mOrder: Order? = null
     private var mValueEventListener: ValueEventListener? = null
@@ -64,6 +65,7 @@ class ReceiptOrderActivity : BaseActivity() {
         rcvDrinks?.layoutManager = linearLayoutManager
         tvPrice = findViewById(R.id.tv_price)
         tvVoucher = findViewById(R.id.tv_voucher)
+        tvFee = findViewById(R.id.tv_fee)
         tvTotal = findViewById(R.id.tv_total)
         tvPaymentMethod = findViewById(R.id.tv_payment_method)
         tvTrackingOrder = findViewById(R.id.tv_tracking_order)
@@ -111,6 +113,8 @@ class ReceiptOrderActivity : BaseActivity() {
         tvPrice!!.text = strPrice
         val strVoucher = "-" + mOrder!!.voucher + Constant.CURRENCY
         tvVoucher!!.text = strVoucher
+        val strFee = "+" +mOrder!!.fee.toString() + Constant.CURRENCY
+        tvFee!!.text = strFee
         val strTotal = mOrder!!.total.toString() + Constant.CURRENCY
         tvTotal!!.text = strTotal
         tvPaymentMethod!!.text = mOrder!!.paymentMethod

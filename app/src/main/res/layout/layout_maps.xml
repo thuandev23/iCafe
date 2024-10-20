@@ -83,7 +83,7 @@
             android:layout_gravity="center"
             android:background="@drawable/bg_button_enable_corner_16"
             android:textColor="@color/white"
-            android:text="Done" />
+            android:text="@string/done" />
     </LinearLayout>
 
 </RelativeLayout>

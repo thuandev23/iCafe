@@ -4,9 +4,8 @@
         <shape android:shape="rectangle">
             <gradient
                 android:startColor="@color/bgFilter"
-                android:endColor="@color/colorPrimary"
+                android:endColor="@color/colorSecondary"
                 android:angle="90" />
-            <corners android:radius="8dp" />
         </shape>
     </item>
 </layer-list>

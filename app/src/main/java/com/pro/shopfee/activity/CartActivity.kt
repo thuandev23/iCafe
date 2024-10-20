@@ -32,6 +32,7 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.*
 
 class CartActivity : BaseActivity() {
 
@@ -53,6 +54,7 @@ class CartActivity : BaseActivity() {
     private var cartAdapter: CartAdapter? = null
     private var priceDrink = 0
     private var mAmount = 0
+    private var fee = 0
     private var paymentMethodSelected: PaymentMethod? = null
     private var addressSelected: Address? = null
     private var latitudeAddress: Double? = 0.0
@@ -157,6 +159,7 @@ class CartActivity : BaseActivity() {
             orderBooking.longitude = longitudeAddress!!
             orderBooking.status = Order.STATUS_CANCEL_OR_ACCEPT
             orderBooking.cancelReason = ""
+            orderBooking.fee = fee
             sendNotificationToAdmins(orderBooking.userEmail.toString())
             val bundle = Bundle()
             bundle.putSerializable(Constant.ORDER_OBJECT, orderBooking)
@@ -204,6 +207,7 @@ class CartActivity : BaseActivity() {
         tvCountItem!!.text = strCountItem
     }
 
+    @SuppressLint("SetTextI18n")
     private fun calculateTotalPrice() {
         if (listDrinkCart == null || listDrinkCart!!.isEmpty()) {
             val strZero = 0.toString() + Constant.CURRENCY
@@ -224,6 +228,23 @@ class CartActivity : BaseActivity() {
         if (voucherSelected != null) {
             mAmount -= voucherSelected!!.getPriceDiscount(priceDrink)
         }
+        // Calculate the distance between shop and user
+        if(addressSelected!=null) {
+            val shopLatitude = 10.878057
+            val shopLongitude = 106.654845
+            val distance = calculateDistance(
+                shopLatitude,
+                shopLongitude,
+                latitudeAddress!!,
+                longitudeAddress!!
+            )
+            // Calculate the delivery fee based on the distance
+            val deliveryFee = calculateDeliveryFee(distance)
+            val deliveryFeeTextView = findViewById<TextView>(R.id.tv_price_shipping)
+            deliveryFeeTextView.text = "+$deliveryFee${Constant.CURRENCY}"
+            fee = deliveryFee
+            mAmount += deliveryFee
+        }
         val strAmount = mAmount.toString() + Constant.CURRENCY
         tvAmount!!.text = strAmount
     }
@@ -240,6 +261,7 @@ class CartActivity : BaseActivity() {
         tvAddress!!.text = addressSelected!!.address
         latitudeAddress = event.lat
         longitudeAddress = event.lng
+        calculateTotalPrice()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -373,4 +395,23 @@ class CartActivity : BaseActivity() {
             EventBus.getDefault().unregister(this)
         }
     }
+    private fun calculateDistance(
+        lat1: Double, lon1: Double,
+        lat2: Double, lon2: Double
+    ): Double {
+        val R = 6371 // Radius of the Earth in kilometers
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+        val a = sin(dLat / 2) * sin(dLat / 2) +
+                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
+                sin(dLon / 2) * sin(dLon / 2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        return R * c // Distance in kilometers
+    }
+    private fun calculateDeliveryFee(distance: Double): Int {
+        val baseFee = 10 // Base fee in your currency (e.g., 10,000 VND)
+        val feePerKm = 3  // Fee per kilometer (e.g., 3,000 VND per km)
+        return baseFee + (distance * feePerKm).toInt()
+    }
+
 }

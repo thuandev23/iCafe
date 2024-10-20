@@ -1,0 +1,311 @@
+<resources>
+    <string name="app_name">iCafe</string>
+
+    <string name="nav_home">홈</string>
+    <string name="nav_history">기록</string>
+    <string name="nav_account">계정</string>
+
+    <string name="title_voucher">프로모션</string>
+    <string name="title_payment_method">결제 방법</string>
+
+    <!-- action -->
+    <string name="action_ok">확인</string>
+    <string name="action_cancel">취소</string>
+    <string name="action_add">추가</string>
+    <string name="action_edit">수정</string>
+
+    <string name="hint_email">이메일을 입력하세요</string>
+    <string name="hint_password">비밀번호를 입력하세요</string>
+    <string name="hint_password_old">이전 비밀번호를 입력하세요…</string>
+    <string name="hint_password_new">새 비밀번호를 입력하세요…</string>
+    <string name="hint_password_confirm">새 비밀번호를 확인하세요…</string>
+    <string name="hint_optional">선택사항</string>
+    <string name="hint_rating_review">의견을 남겨주세요</string>
+
+    <string name="admin">관리자</string>
+    <string name="user">사용자</string>
+    <string name="email">이메일</string>
+    <string name="password">비밀번호</string>
+    <string name="register">가입</string>
+    <string name="have_account">계정이 있으신가요?</string>
+    <string name="have_not_account">계정이 없으신가요?</string>
+    <string name="login">로그인</string>
+    <string name="forgot_password">비밀번호를 잊으셨나요?</string>
+    <string name="feedback">피드백</string>
+    <string name="contact">문의하기</string>
+    <string name="change_password">비밀번호 변경</string>
+    <string name="sign_out">로그아웃</string>
+    <string name="reset_password">비밀번호 재설정</string>
+    <string name="add_address">배송 주소 추가</string>
+    <string name="full_name">성명:</string>
+    <string name="address">주소:</string>
+    <string name="phone_number">전화번호:</string>
+    <string name="address_title">배송 주소</string>
+    <string name="label_full_name">성명 (*)</string>
+    <string name="label_phone">전화번호 (*)</string>
+    <string name="label_address">주소 (*)</string>
+    <string name="order_full_name">성명</string>
+    <string name="order_address">주소</string>
+    <string name="order_phone_number">전화번호</string>
+
+    <string name="msg_get_date_error">오류가 발생했습니다. 다시 시도해주세요</string>
+    <string name="msg_exit_app">앱을 종료하시겠습니까?</string>
+    <string name="msg_waiting_message">잠시만 기다려주세요…</string>
+
+    <string name="msg_email_require">이메일을 입력하세요</string>
+    <string name="msg_password_require">비밀번호를 입력하세요</string>
+    <string name="msg_email_invalid">유효하지 않은 이메일입니다</string>
+    <string name="msg_email_invalid_admin">관리자 이메일 형식이 유효하지 않습니다</string>
+    <string name="msg_email_invalid_user">사용자 이메일 형식이 유효하지 않습니다</string>
+
+    <string name="label_user_name">이메일</string>
+    <string name="label_old_password">이전 비밀번호</string>
+    <string name="label_new_password">새 비밀번호</string>
+    <string name="label_confirm_new_password">새 비밀번호 확인</string>
+    <string name="msg_old_password_require">이전 비밀번호를 입력하세요</string>
+    <string name="msg_new_password_require">새 비밀번호를 입력하세요</string>
+    <string name="msg_confirm_password_require">새 비밀번호를 확인하세요</string>
+    <string name="msg_old_password_invalid">이전 비밀번호가 잘못되었습니다. 다시 입력하세요</string>
+    <string name="msg_confirm_password_invalid">비밀번호 확인이 일치하지 않습니다</string>
+    <string name="msg_new_password_invalid">새 비밀번호는 이전 비밀번호와 달라야 합니다</string>
+
+    <string name="msg_change_password_successfully">비밀번호가 성공적으로 변경되었습니다</string>
+    <string name="msg_reset_password_successfully">비밀번호 재설정에 성공했습니다. 이메일을 확인하세요</string>
+
+    <string name="msg_register_error">등록에 실패했습니다. 다시 시도하세요</string>
+    <string name="msg_login_error">로그인에 실패했습니다. 다시 시도하세요</string>
+    <string name="message_enter_infor">모든 정보를 입력하세요</string>
+    <string name="msg_add_address_success">배송 주소가 성공적으로 추가되었습니다</string>
+
+    <string name="filter_all">전체</string>
+    <string name="filter_rate">평점</string>
+    <string name="filter_price">가격</string>
+    <string name="filter_promotion">프로모션</string>
+
+    <string name="hint_home_search">오늘 무엇을 마시고 싶으신가요?</string>
+    <string name="hint_voucher_code">프로모션 코드를 입력하세요</string>
+    <string name="ratings_and_reviews">평점과 리뷰</string>
+    <string name="customize">맞춤 설정</string>
+    <string name="label_variant">음료</string>
+    <string name="label_size">크기</string>
+    <string name="label_sugar">설탕</string>
+    <string name="label_ice">얼음</string>
+    <string name="label_hot">핫</string>
+    <string name="label_regular">작은</string>
+    <string name="label_medium">중간</string>
+    <string name="label_large">큰</string>
+    <string name="label_normal">보통</string>
+    <string name="label_less">적게</string>
+    <string name="label_topping">토핑 추가</string>
+    <string name="label_notes">메모</string>
+    <string name="label_total">총 금액</string>
+    <string name="label_add_order">장바구니에 추가</string>
+
+    <string name="label_rating_review_order">이 주문의 배달을 평가하세요</string>
+    <string name="label_rating_review_drink">이 음료에 대해 어떻게 생각하세요?</string>
+    <string name="label_rating">평점</string>
+    <string name="label_review">리뷰</string>
+    <string name="label_review_note">리뷰는 공개됩니다</string>
+    <string name="label_send_review">리뷰 보내기</string>
+    <string name="msg_send_review_success">리뷰가 성공적으로 전송되었습니다</string>
+
+    <string name="label_cart">장바구니</string>
+    <string name="label_checkout">주문하기</string>
+    <string name="label_payment_method">결제 방법</string>
+    <string name="label_no_payment_method">결제 방법이 선택되지 않았습니다</string>
+    <string name="label_no_address">배송 주소가 선택되지 않았습니다</string>
+    <string name="label_no_voucher">프로모션 코드가 적용되지 않았습니다</string>
+    <string name="label_payment_summary">결제 요약</string>
+    <string name="label_price">가격</string>
+    <string name="label_choose_payment_method">결제 방법을 선택하세요</string>
+    <string name="label_choose_address">배송 주소를 선택하세요</string>
+    <string name="label_item">음료</string>
+
+    <string name="label_thank_you">감사합니다!</string>
+    <string name="label_your_transaction_success">거래가 성공했습니다</string>
+    <string name="label_id_transaction">거래 ID</string>
+    <string name="label_date_and_time">날짜와 시간</string>
+    <string name="label_tracking_order">주문 추적</string>
+    <string name="label_receipt_order">영수증</string>
+
+    <string name="shop_confirm_order">가게에서 주문을 확인 중입니다</string>
+    <string name="label_shop_takes_order">가게에서 주문을 접수했습니다</string>
+    <string name="label_prepare_your_order">주문 준비 중입니다</string>
+    <string name="label_order_complete">주문이 완료되었습니다. 곧 배송됩니다</string>
+    <string name="label_take_order">주문 받기</string>
+    <string name="label_take_order_message">주문을 확인한 후에 수령하세요</string>
+    <string name="label_process">처리 중</string>
+    <string name="label_completed">완료</string>
+    <string name="label_done">완료</string>
+    <string name="label_success">완료 </string>
+
+    <string name="label_facebook">Facebook</string>
+    <string name="label_call">전화</string>
+    <string name="label_gmail">Gmail</string>
+    <string name="label_skype">Skype</string>
+    <string name="label_youtube">Youtube</string>
+    <string name="label_zalo">Zalo</string>
+    <string name="name_require">이름을 입력하세요</string>
+    <string name="comment_require">피드백을 입력하세요</string>
+    <string name="msg_send_feedback_success">피드백이 성공적으로 전송되었습니다. 감사합니다!</string>
+    <string name="feedback_name">이름(*)</string>
+    <string name="feedback_email">이메일</string>
+    <string name="feedback_phone">전화번호</string>
+    <string name="feedback_comment">내용(*)</string>
+    <string name="send_feedback">피드백 보내기</string>
+
+    <string name="hint_search_category">카테고리 이름…</string>
+    <string name="hint_search_topping">이름…</string>
+    <string name="hint_search_drink">음료 이름…</string>
+
+    <string name="label_category">카테고리</string>
+    <string name="label_category_require">카테고리(*)</string>
+    <string name="label_drink">음료</string>
+    <string name="label_order">주문</string>
+    <string name="label_settings">설정</string>
+    <string name="label_featured">추천:</string>
+    <string name="featured">추천</string>
+    <string name="label_category_drink">카테고리:</string>
+    <string name="label_discount">할인(*)</string>
+    <string name="label_promotion">프로모션</string>
+    <string name="label_order_minimum">최소 주문 금액 적용</string>
+    <string name="label_currency">.000원</string>
+    <string name="label_add_voucher">프로모션 추가</string>
+    <string name="label_update_voucher">프로모션 수정</string>
+    <string name="label_name">이름(*)</string>
+    <string name="label_description">설명(*)</string>
+    <string name="label_price_require">가격(*)</string>
+    <string name="label_add_topping">토핑 추가</string>
+    <string name="label_update_topping">토핑 수정</string>
+    <string name="label_add_category">카테고리 추가</string>
+    <string name="label_update_category">카테고리 수정</string>
+    <string name="label_image">이미지(*)</string>
+    <string name="label_image_large">대형 이미지(*)</string>
+    <string name="label_add_drink">음료 추가</string>
+    <string name="label_update_drink">음료 수정</string>
+
+    <string name="manage_topping">음료 토핑</string>
+    <string name="manage_voucher">프로모션 관리</string>
+    <string name="manage_feedback">피드백 관리</string>
+
+    <string name="msg_confirm_delete">이 항목을 삭제하시겠습니까?</string>
+    <string name="msg_delete_title">삭제 확인</string>
+    <string name="msg_delete_drink_successfully">음료가 성공적으로 삭제되었습니다</string>
+    <string name="msg_delete_category_successfully">카테고리가 성공적으로 삭제되었습니다</string>
+    <string name="msg_delete_voucher_successfully">프로모션이 성공적으로 삭제되었습니다</string>
+    <string name="msg_edit_voucher_success">프로모션이 성공적으로 수정되었습니다</string>
+    <string name="msg_add_voucher_success">프로모션이 성공적으로 추가되었습니다</string>
+    <string name="msg_discount_require">할인율을 입력하세요</string>
+    <string name="msg_delete_topping_successfully">토핑이 성공적으로 삭제되었습니다</string>
+    <string name="msg_edit_topping_success">토핑이 성공적으로 수정되었습니다</string>
+    <string name="msg_add_topping_success">토핑이 성공적으로 추가되었습니다</string>
+    <string name="msg_name_require">이름을 입력하세요</string>
+    <string name="msg_description_require">설명을 입력하세요</string>
+    <string name="msg_price_require">가격을 입력하세요</string>
+    <string name="msg_image_require">이미지를 입력하세요</string>
+    <string name="msg_image_banner_require">대형 이미지를 입력하세요</string>
+    <string name="msg_edit_category_success">카테고리가 성공적으로 수정되었습니다</string>
+    <string name="msg_add_category_success">카테고리가 성공적으로 추가되었습니다</string>
+    <string name="msg_edit_drink_success">음료가 성공적으로 수정되었습니다</string>
+    <string name="msg_add_drink_success">음료가 성공적으로 추가되었습니다</string>
+    <string name="confirm_password">비밀번호 확인</string>
+    <string name="hint_confirm_password">비밀번호를 다시 입력하세요</string>
+    <string name="msg_password_mismatch">비밀번호가 일치하지 않습니다</string>
+    <string name="change_language">언어 변경</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">첫 번째 프래그먼트</string>
+    <string name="second_fragment_label">두 번째 프래그먼트</string>
+    <string name="next">다음</string>
+    <string name="previous">이전</string>
+    <string name="label_change_language">언어 변경</string>
+
+
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
+        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
+        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
+        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
+        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
+        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
+        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
+        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
+        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
+        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
+        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
+        bibendum, vel congue leo egestas.\n\n
+        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
+        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
+        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
+        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
+        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
+        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
+        est.\n\n
+        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
+        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
+        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
+        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
+        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
+        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
+        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
+        convallis.\n\n
+        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
+        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
+        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
+        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
+        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
+        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
+        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
+    </string>
+    <string name="text_choose_language">표시 언어 선택</string>
+    <string name="txt_change_language">언어를 변경하시겠습니까?</string>
+    <string name="txt_app_restart">변경 사항을 적용하려면 앱이 다시 시작됩니다.</string>
+    <string name="yes">예</string>
+    <string name="no">아니오</string>
+    <string name="info_user">개인 정보</string>
+    <string name="gender">성별을 업데이트 해주세요</string>
+    <string name="address_user">주소를 업데이트 해주세요</string>
+    <string name="birthday">생일을 업데이트 해주세요</string>
+    <string name="phone_number_user">전화번호를 업데이트 해주세요</string>
+    <string name="email_user">이메일을 업데이트 해주세요</string>
+    <string name="update">업데이트</string>
+    <string name="hint_user_name">이름을 입력하세요</string>
+    <string name="user_name">당신의 이름</string>
+    <string name="msg_userName_require">이름을 입력하세요</string>
+    <string name="hello">안녕하세요</string>
+    <string name="icafe_new_drink_title">iCafe: 새로운 음료!</string>
+    <string name="icafe_new_drink_desc">새로운 \%1$s\ 추가되었습니다. 지금 확인하세요!</string>
+    <string name="icafe_new_voucher_title">iCafe: 새로운 쿠폰 등장!</string>
+    <string name="icafe_new_voucher_desc">\%1$s\%% 할인이 제공됩니다. 지금 확인하세요!</string>
+    <string name="notification">알림</string>
+    <string name="label_cancel_order">주문 취소</string>
+    <string name="icafe_new_order_title">iCafe: 새로운 주문 도착!</string>
+    <string name="icafe_new_order_desc">\%1$s\의 새로운 주문입니다. 지금 확인하세요!</string>
+    <string name="your_address">주소</string>
+    <string name="hint_user_address">당신의 주소</string>
+    <string name="msg_address_require">주소를 입력하세요</string>
+    <string name="pick_your_location">위치를 선택하세요</string>
+    <string name="msg_password_form">비밀번호는 대문자, 소문자, 숫자 및 특수 문자를 포함하여 8자 이상이어야 합니다.</string>
+    <string name="no_notification">알림이 없습니다!</string>
+    <string name="msg_customer">고객 메시지</string>
+    <string name="type_name_to_search">고객 이름을 입력하세요</string>
+    <string name="label_cancel">취소</string>
+    <string name="confirm_new_order">새로운 주문 확인</string>
+    <string name="title_confirm_new_order">이 주문을 받으시겠습니까?</string>
+    <string name="cancel">취소</string>
+    <string name="title_cancel">주문 취소</string>
+    <string name="hint_cancel_input">주문 취소 사유를 입력하세요</string>
+    <string name="confirm">확인</string>
+    <string name="enter_reasson">주문 취소 사유를 입력하세요</string>
+    <string name="reasoncancel">주문 취소 사유</string>
+    <string name="no_have_address">주소가 없습니다</string>
+    <string name="delivery">배송비</string>
+    <string name="reviews_drink">음료 리뷰</string>
+    <string name="rating_txt">평가</string>
+    <string name="no_rating">평가가 없습니다</string>
+    <string name="chat_with_us">채팅</string>
+    <string name="anonymous">익명</string>
+    <string name="start_typing">입력 시작...</string>
+    <string name="no_data">데이터가 없습니다</string>
+    <string name="done">완료</string>
+
+</resources>

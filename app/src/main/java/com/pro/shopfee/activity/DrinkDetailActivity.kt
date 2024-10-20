@@ -242,7 +242,7 @@ class DrinkDetailActivity : BaseActivity() {
             bundle.putSerializable(Constant.RATING_REVIEW_OBJECT, ratingReview)
             startActivity(
                 this@DrinkDetailActivity,
-                RatingReviewActivity::class.java, bundle
+                ReviewDrinksActivity::class.java, bundle
             )
         }
         tvAddOrder!!.setOnClickListener {

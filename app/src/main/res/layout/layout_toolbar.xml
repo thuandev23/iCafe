@@ -32,8 +32,8 @@
             android:textSize="@dimen/text_size_xxnormal" />
     </LinearLayout>
 
-    <View
+   <!-- <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/bgMainColor" />
+        android:background="@color/bgMainColor" />-->
 </LinearLayout>

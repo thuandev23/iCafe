@@ -47,11 +47,11 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <View
+    <!--<View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/chat_toolbar"
-        android:background="@color/quantum_grey400" />
+        android:background="@color/quantum_grey400" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_chat_messages"
@@ -85,7 +85,7 @@
             android:layout_marginBottom="@dimen/define_dimen_4"
             android:layout_weight="1"
             android:background="@drawable/shape_edit_txt"
-            android:hint="Start typing..."
+            android:hint="@string/start_typing"
             android:maxLines="5"
             android:padding="10dp"
             android:textColor="@color/black"

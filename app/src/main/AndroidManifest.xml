@@ -68,6 +68,10 @@
             android:name=".activity.ChatActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.ReviewDrinksActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".activity.admin.AdminChatActivity"
             android:exported="false" />
         <activity

@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/define_dimen_10"
-                android:text="Chat with us"
+                android:text="@string/chat_with_us"
                 android:textColor="@color/textColorHeading"
                 android:textSize="@dimen/text_size_small" />
         </LinearLayout>

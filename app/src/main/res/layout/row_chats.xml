@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/img_customer_chat"
-            android:text="User Name"
+            android:text="anonymous"
             android:textColor="@color/black"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -46,9 +46,9 @@
             <!-- Chat Message -->
             <TextView
                 android:id="@+id/tv_chat_customer_message"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="This is a sample chat message.This is a sample chat message.This is a sample chat message."
+                android:text="This is a sample chat message"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 android:maxLines="1"

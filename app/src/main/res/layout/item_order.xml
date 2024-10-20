@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/define_dimen_14"
-    tools:ignore="HardcodedText, ContentDescription, UseCompoundDrawables, RelativeOverlap" >
+    app:cardElevation="4dp"
+    android:layout_marginTop="@dimen/define_dimen_5"
+    app:cardCornerRadius="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        tools:ignore="HardcodedText, ContentDescription, UseCompoundDrawables, RelativeOverlap">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,13 +26,15 @@
             android:layout_height="@dimen/define_dimen_60"
             android:src="@drawable/image_drink_example"
             app:civ_border_color="@color/colorAccent"
-            app:civ_border_width="0.5dp" />
+            app:civ_border_width="0.5dp"
+            android:layout_margin="5dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/define_dimen_10"
             android:layout_toEndOf="@+id/img_drink"
+            android:layout_margin="@dimen/define_dimen_5"
             android:orientation="vertical">
 
             <LinearLayout
@@ -155,7 +165,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:visibility="visible"
-        android:layout_marginTop="@dimen/define_dimen_16"
+        android:layout_marginTop="@dimen/define_dimen_10"
+        android:layout_marginHorizontal="@dimen/define_dimen_5"
         android:background="@drawable/bg_white_corner_6_border_gray"
         android:orientation="horizontal">
 
@@ -187,7 +198,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/define_dimen_5"
-            android:background="@color/colorAccent">
+            android:background="@drawable/right_bg">
 
             <TextView
                 android:layout_width="match_parent"
@@ -213,6 +224,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/define_dimen_14"
+        android:layout_marginTop="@dimen/define_dimen_10"
         android:background="@color/bgFilter" />
 </LinearLayout>
+</androidx.cardview.widget.CardView>

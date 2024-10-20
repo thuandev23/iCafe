@@ -72,4 +72,66 @@
             android:textColor="@color/textColorHeading"
             android:textSize="@dimen/text_size_small" />
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/define_dimen_20"
+        android:layout_marginTop="@dimen/define_dimen_10"
+        android:layout_marginEnd="@dimen/define_dimen_20"
+        android:background="@color/textColorDescription" />
+
+    <LinearLayout
+        android:id="@+id/btn_change_language_ko"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/define_dimen_16"
+        android:layout_marginTop="@dimen/define_dimen_10"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/define_dimen_10">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/south_korea" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/define_dimen_16"
+            android:text="Korea"
+            android:textColor="@color/textColorHeading"
+            android:textSize="@dimen/text_size_small" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="@dimen/define_dimen_20"
+        android:layout_marginTop="@dimen/define_dimen_10"
+        android:layout_marginEnd="@dimen/define_dimen_20"
+        android:background="@color/textColorDescription" />
+
+    <LinearLayout
+        android:id="@+id/btn_change_language_jp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/define_dimen_16"
+        android:layout_marginTop="@dimen/define_dimen_10"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/define_dimen_10">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/japan" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/define_dimen_16"
+            android:text="Japan"
+            android:textColor="@color/textColorHeading"
+            android:textSize="@dimen/text_size_small" />
+    </LinearLayout>
 </LinearLayout>

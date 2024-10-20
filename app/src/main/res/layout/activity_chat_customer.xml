@@ -60,7 +60,7 @@
             android:id="@+id/tv_no_data"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chưa có dữ liệu nào"
+            android:text="@string/no_data"
             android:textSize="16sp"
             android:layout_centerInParent="true"
             android:visibility="gone"
