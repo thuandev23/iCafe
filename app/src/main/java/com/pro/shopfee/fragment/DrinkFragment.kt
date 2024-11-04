@@ -31,7 +31,7 @@ import java.text.Normalizer
 import java.util.*
 import java.util.regex.Pattern
 
-class DrinkFragment : Fragment() {
+class  DrinkFragment : Fragment() {
 
     private var mView: View? = null
     private var rcvFilter: RecyclerView? = null
@@ -137,7 +137,7 @@ class DrinkFragment : Fragment() {
 
             override fun onCancelled(error: DatabaseError) {}
         }
-        MyApplication[activity!!].getDrinkDatabaseReference()
+        MyApplication[requireActivity()].getDrinkDatabaseReference()
             ?.orderByChild(Constant.CATEGORY_ID)
             ?.equalTo(categoryId.toDouble())
             ?.addValueEventListener(mValueEventListener!!)
@@ -243,7 +243,7 @@ class DrinkFragment : Fragment() {
         super.onDestroyView()
         if (filterAdapter != null) filterAdapter!!.release()
         if (activity != null && mValueEventListener != null) {
-            MyApplication[activity!!].getDrinkDatabaseReference()
+            MyApplication[requireActivity()].getDrinkDatabaseReference()
                 ?.removeEventListener(mValueEventListener!!)
         }
         if (EventBus.getDefault().isRegistered(this)) {

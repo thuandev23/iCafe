@@ -1,5 +1,6 @@
 package com.pro.shopfee.activity.admin
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
@@ -18,6 +19,7 @@ import com.pro.shopfee.utils.GlobalFunction
 import com.pro.shopfee.utils.StringUtil.isEmpty
 import retrofit2.*
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.collections.set
@@ -27,6 +29,8 @@ class AdminAddVoucherActivity : BaseActivity() {
     private var tvToolbarTitle: TextView? = null
     private var edtDiscount: EditText? = null
     private var edtMinimum: EditText? = null
+    private var tvChooseDateExpired: TextView? = null
+
     private var btnAddOrEdit: Button? = null
     private var isUpdate = false
     private var mVoucher: Voucher? = null
@@ -52,10 +56,35 @@ class AdminAddVoucherActivity : BaseActivity() {
         tvToolbarTitle = findViewById(R.id.tv_toolbar_title)
         edtDiscount = findViewById(R.id.edt_discount)
         edtMinimum = findViewById(R.id.edt_minimum)
+        tvChooseDateExpired = findViewById(R.id.edt_expiredDate)
         btnAddOrEdit = findViewById(R.id.btn_add_or_edit)
         imgToolbarBack.setOnClickListener { onBackPressed() }
         btnAddOrEdit?.setOnClickListener { addOrEditVoucher() }
+        tvChooseDateExpired?.setOnClickListener {
+            showDatePickerDialog { selectedDate ->
+                tvChooseDateExpired?.text = selectedDate
+
+            }
+        }
     }
+
+    private fun showDatePickerDialog(onDateSelected: (String) -> Unit) {
+        val calendar = Calendar.getInstance()
+        val datePickerDialog = DatePickerDialog(
+            this,
+            { _, year, month, dayOfMonth ->
+                calendar.set(year, month, dayOfMonth)
+                val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val selectedDate = format.format(calendar.time)
+                onDateSelected(selectedDate)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.show()
+    }
+
 
     private fun initView() {
         if (isUpdate) {
@@ -70,50 +99,66 @@ class AdminAddVoucherActivity : BaseActivity() {
     }
 
     private fun addOrEditVoucher() {
-        val strDiscount = edtDiscount!!.text.toString().trim { it <= ' ' }
-        var strMinimum = edtMinimum!!.text.toString().trim { it <= ' ' }
-        if (isEmpty(strDiscount) || strDiscount.toInt() <= 0) {
-            Toast.makeText(this, getString(R.string.msg_discount_require), Toast.LENGTH_SHORT)
-                .show()
+        val strDiscount = edtDiscount!!.text.toString().trim()
+        var strMinimum = edtMinimum!!.text.toString().trim()
+        val expireDateStr = tvChooseDateExpired?.text.toString().trim()
+
+        // Kiểm tra xem expireDateStr có rỗng không
+        if (expireDateStr.isEmpty()) {
+            Toast.makeText(this, "Chọn ngày hết hạn", Toast.LENGTH_SHORT).show()
             return
         }
-        if (isEmpty(strMinimum)) {
-            strMinimum = "0"
+
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val selectedExpireDate: Long = dateFormat.parse(expireDateStr)?.time ?: 0L
+
+        if (selectedExpireDate == 0L) {
+            Toast.makeText(this, "Ngày hết hạn không hợp lệ", Toast.LENGTH_SHORT).show()
+            return
         }
-        // Update voucher
+
+        // Kiểm tra là cập nhật hay thêm mới
         if (isUpdate) {
             showProgressDialog(true)
-            val map: MutableMap<String, Any> = HashMap()
-            map["discount"] = strDiscount.toInt()
-            map["minimum"] = strMinimum.toInt()
+            val map = hashMapOf<String, Any>(
+                "discount" to strDiscount.toInt(),
+                "minimum" to strMinimum.toInt(),
+                "expiredDate" to selectedExpireDate
+            )
+
             MyApplication[this].getVoucherDatabaseReference()
                 ?.child(mVoucher!!.id.toString())
                 ?.updateChildren(map) { _: DatabaseError?, _: DatabaseReference? ->
                     showProgressDialog(false)
                     Toast.makeText(
-                        this,
-                        getString(R.string.msg_edit_voucher_success), Toast.LENGTH_SHORT
+                        this, getString(R.string.msg_edit_voucher_success), Toast.LENGTH_SHORT
                     ).show()
                     GlobalFunction.hideSoftKeyboard(this)
                 }
             return
         }
 
-        // Add voucher
+        // Thêm voucher mới
         showProgressDialog(true)
         val voucherId = System.currentTimeMillis()
-        val voucher = Voucher(voucherId, strDiscount.toInt(), strMinimum.toInt())
+        val voucher = Voucher(
+            id = voucherId,
+            discount = strDiscount.toInt(),
+            minimum = strMinimum.toInt(),
+            createdAt = System.currentTimeMillis(),
+            expiredDate = selectedExpireDate // Dùng timestamp trực tiếp
+        )
+
         MyApplication[this].getVoucherDatabaseReference()
             ?.child(voucherId.toString())
             ?.setValue(voucher) { _: DatabaseError?, _: DatabaseReference? ->
                 showProgressDialog(false)
                 edtDiscount!!.setText("")
                 edtMinimum!!.setText("")
+                tvChooseDateExpired!!.text = "01/01/2024"
                 GlobalFunction.hideSoftKeyboard(this)
                 Toast.makeText(
-                    this,
-                    getString(R.string.msg_add_voucher_success),
-                    Toast.LENGTH_SHORT
+                    this, getString(R.string.msg_add_voucher_success), Toast.LENGTH_SHORT
                 ).show()
                 sendNotificationToAll(strDiscount)
             }

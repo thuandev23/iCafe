@@ -1,7 +1,13 @@
 package com.pro.shopfee.activity
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.StrictMode
+import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
@@ -23,12 +29,18 @@ import com.pro.shopfee.notification.NotificationData
 import com.pro.shopfee.prefs.DataStoreManager.Companion.user
 import com.pro.shopfee.utils.Constant
 import com.pro.shopfee.utils.GlobalFunction.startActivity
+import com.pro.shopfee.zalopay.Api.CreateOrder
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import vn.zalopay.sdk.Environment
+import vn.zalopay.sdk.ZaloPayError
+import vn.zalopay.sdk.ZaloPaySDK
+import vn.zalopay.sdk.listeners.PayOrderListener
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -71,6 +83,10 @@ class CartActivity : BaseActivity() {
         initUi()
         initListener()
         initData()
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+        // ZaloPay SDK Init
+        ZaloPaySDK.init(2553, Environment.SANDBOX)
     }
 
     private fun initToolbar() {
@@ -103,10 +119,15 @@ class CartActivity : BaseActivity() {
         layoutAddOrder!!.setOnClickListener { finish() }
         layoutPaymentMethod!!.setOnClickListener {
             val bundle = Bundle()
-            if (paymentMethodSelected != null) {
-                bundle.putInt(Constant.PAYMENT_METHOD_ID, paymentMethodSelected!!.id)
+            if (addressSelected != null) {
+                if (paymentMethodSelected != null) {
+                    bundle.putInt(Constant.PAYMENT_METHOD_ID, paymentMethodSelected!!.id)
+                }
+                startActivity(this@CartActivity, PaymentMethodActivity::class.java, bundle)
+            } else {
+                showToastMessage(getString(R.string.vui_l_ng_ch_n_a_ch_giao_h_ng_tr_c_khi_ch_n_ph_ng_th_c_thanh_to_n))
             }
-            startActivity(this@CartActivity, PaymentMethodActivity::class.java, bundle)
+
         }
         layoutAddress!!.setOnClickListener {
             val bundle = Bundle()
@@ -142,8 +163,7 @@ class CartActivity : BaseActivity() {
             for (drink in listDrinkCart!!) {
                 drinks.add(
                     DrinkOrder(
-                        drink.name, drink.option, drink.count,
-                        drink.priceOneDrink, drink.image
+                        drink.name, drink.option, drink.count, drink.priceOneDrink, drink.image
                     )
                 )
             }
@@ -160,11 +180,94 @@ class CartActivity : BaseActivity() {
             orderBooking.status = Order.STATUS_CANCEL_OR_ACCEPT
             orderBooking.cancelReason = ""
             orderBooking.fee = fee
-            sendNotificationToAdmins(orderBooking.userEmail.toString())
-            val bundle = Bundle()
-            bundle.putSerializable(Constant.ORDER_OBJECT, orderBooking)
-            startActivity(this@CartActivity, PaymentActivity::class.java, bundle)
+            if (paymentMethodSelected!!.id == 1) {
+                val bundle = Bundle()
+                bundle.putSerializable(Constant.ORDER_OBJECT, orderBooking)
+                startActivity(
+                    this@CartActivity, PaymentActivity::class.java, bundle
+                )
+            } else if (paymentMethodSelected!!.id == 4) {
+                // loading 2s before go to payment
+                Toast.makeText(this, "Đang chuẩn bị thanh toán...", Toast.LENGTH_SHORT).show()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    initiatePayment(orderBooking, orderBooking.total)
+                }, 1500)
+            }
         }
+    }
+
+    private fun initiatePayment(orderBooking: Order, total: Int) {
+        // tao order
+        val orderApi = CreateOrder()
+        try {
+            val data: JSONObject? = orderApi.createOrder("$total")
+            Log.d("Amount", data.toString())
+            //lblZpTransToken.setVisibility(View.VISIBLE) // loading on UI
+            val code = data?.getString("return_code")
+            Toast.makeText(this@CartActivity, "return-code: $code", Toast.LENGTH_SHORT).show()
+            if (code.equals("1")) {
+                val token = data?.getString("zp_trans_token")
+                ZaloPaySDK.getInstance()
+                    .payOrder(this, token!!, "demozpdk://app", object : PayOrderListener {
+                        override fun onPaymentSucceeded(
+                            transactionId: String?, transToken: String?, appTransID: String?
+                        ) {
+                            runOnUiThread {
+                                AlertDialog.Builder(this@CartActivity).setTitle("Payment Success")
+                                    .setMessage(
+                                        java.lang.String.format(
+                                            "TransactionId: %s - TransToken: %s",
+                                            transactionId,
+                                            transToken
+                                        )
+                                    ).show()
+                                sendNotificationToAdmins(orderBooking.userEmail.toString())
+                                val bundle = Bundle()
+                                bundle.putSerializable(Constant.ORDER_OBJECT, orderBooking)
+                                startActivity(
+                                    this@CartActivity, PaymentActivity::class.java, bundle
+                                )
+                            }
+
+                        }
+
+                        override fun onPaymentCanceled(zpTransToken: String?, appTransID: String?) {
+                            AlertDialog.Builder(this@CartActivity).setTitle("User Cancel Payment")
+                                .setMessage(
+                                    java.lang.String.format(
+                                        "zpTransToken: %s \n", zpTransToken
+                                    )
+                                ).setPositiveButton("OK") { dialog, which -> }
+                                .setNegativeButton("Cancel", null).show()
+
+                        }
+
+                        override fun onPaymentError(
+                            zaloPayError: ZaloPayError?, zpTransToken: String?, appTransID: String?
+                        ) {
+                            AlertDialog.Builder(this@CartActivity).setTitle("Payment Fail")
+                                .setMessage(
+                                    java.lang.String.format(
+                                        "ZaloPayErrorCode: %s \nTransToken: %s",
+                                        zaloPayError.toString(),
+                                        zpTransToken
+                                    )
+                                ).setPositiveButton("OK") { dialog, which -> }
+                                .setNegativeButton("Cancel", null).show()
+
+                        }
+
+                    })
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        ZaloPaySDK.getInstance().onResult(intent)
     }
 
     private fun initData() {
@@ -229,14 +332,11 @@ class CartActivity : BaseActivity() {
             mAmount -= voucherSelected!!.getPriceDiscount(priceDrink)
         }
         // Calculate the distance between shop and user
-        if(addressSelected!=null) {
+        if (addressSelected != null) {
             val shopLatitude = 10.878057
             val shopLongitude = 106.654845
             val distance = calculateDistance(
-                shopLatitude,
-                shopLongitude,
-                latitudeAddress!!,
-                longitudeAddress!!
+                shopLatitude, shopLongitude, latitudeAddress!!, longitudeAddress!!
             )
             // Calculate the delivery fee based on the distance
             val deliveryFee = calculateDeliveryFee(distance)
@@ -269,8 +369,8 @@ class CartActivity : BaseActivity() {
         voucherSelected = event.voucher
         tvVoucher!!.text = voucherSelected!!.title
         tvNameVoucher!!.text = voucherSelected!!.title
-        val strPriceVoucher = ("-" + voucherSelected!!.getPriceDiscount(priceDrink)
-                + Constant.CURRENCY)
+        val strPriceVoucher =
+            ("-" + voucherSelected!!.getPriceDiscount(priceDrink) + Constant.CURRENCY)
         tvPriceVoucher!!.text = strPriceVoucher
         calculateTotalPrice()
     }
@@ -279,6 +379,7 @@ class CartActivity : BaseActivity() {
     fun onOrderSuccessEvent(event: OrderSuccessEvent?) {
         finish()
     }
+
     private fun sendNotificationToAdmins(name: String) {
         getAllDeviceTokens { tokens ->
             val userTokensMap = mutableMapOf<String, MutableList<String>>()
@@ -303,22 +404,18 @@ class CartActivity : BaseActivity() {
 
         val notification = Notification(
             message = NotificationData(
-                token = token,
-                data = notificationData
+                token = token, data = notificationData
             )
         )
 
-        NotificationApi.create().sendNotification(notification).enqueue(
-            object : Callback<Notification> {
+        NotificationApi.create().sendNotification(notification)
+            .enqueue(object : Callback<Notification> {
                 override fun onResponse(
-                    call: Call<Notification>,
-                    response: Response<Notification>
+                    call: Call<Notification>, response: Response<Notification>
                 ) {
                     if (response.isSuccessful) {
                         Toast.makeText(
-                            this@CartActivity,
-                            "Notification sent successfully",
-                            Toast.LENGTH_SHORT
+                            this@CartActivity, "Notification sent successfully", Toast.LENGTH_SHORT
                         ).show()
 
                         val database = FirebaseDatabase.getInstance().getReference("notifications")
@@ -349,22 +446,17 @@ class CartActivity : BaseActivity() {
                             }
                     } else {
                         Toast.makeText(
-                            this@CartActivity,
-                            "Notification failed to send",
-                            Toast.LENGTH_SHORT
+                            this@CartActivity, "Notification failed to send", Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<Notification>, t: Throwable) {
                     Toast.makeText(
-                        this@CartActivity,
-                        "Failed to send notification",
-                        Toast.LENGTH_SHORT
+                        this@CartActivity, "Failed to send notification", Toast.LENGTH_SHORT
                     ).show()
                 }
-            }
-        )
+            })
     }
 
 
@@ -389,25 +481,29 @@ class CartActivity : BaseActivity() {
             }
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
         }
     }
+
+    // giới hạn khu vực giao hang
     private fun calculateDistance(
-        lat1: Double, lon1: Double,
-        lat2: Double, lon2: Double
+        lat1: Double, lon1: Double, lat2: Double, lon2: Double
     ): Double {
-        val R = 6371 // Radius of the Earth in kilometers
+        val R = 6371
         val dLat = Math.toRadians(lat2 - lat1)
         val dLon = Math.toRadians(lon2 - lon1)
-        val a = sin(dLat / 2) * sin(dLat / 2) +
-                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
-                sin(dLon / 2) * sin(dLon / 2)
+        val a =
+            sin(dLat / 2) * sin(dLat / 2) + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * sin(
+                dLon / 2
+            ) * sin(dLon / 2)
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
         return R * c // Distance in kilometers
     }
+
     private fun calculateDeliveryFee(distance: Double): Int {
         val baseFee = 10 // Base fee in your currency (e.g., 10,000 VND)
         val feePerKm = 3  // Fee per kilometer (e.g., 3,000 VND per km)

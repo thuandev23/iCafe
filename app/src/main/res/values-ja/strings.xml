@@ -306,5 +306,6 @@
     <string name="start_typing">入力を開始...</string>
     <string name="no_data">データがありません</string>
     <string name="done">完了</string>
+    <string name="vui_l_ng_ch_n_a_ch_giao_h_ng_tr_c_khi_ch_n_ph_ng_th_c_thanh_to_n">Vui lòng chọn địa chỉ giao hàng trước khi chọn phương thức thanh toán</string>
 
 </resources>

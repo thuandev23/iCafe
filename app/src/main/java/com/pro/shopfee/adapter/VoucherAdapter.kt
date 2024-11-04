@@ -7,12 +7,16 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.pro.shopfee.R
 import com.pro.shopfee.adapter.VoucherAdapter.VoucherViewHolder
 import com.pro.shopfee.model.Voucher
 import com.pro.shopfee.utils.StringUtil.isEmpty
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class VoucherAdapter(
     private var context: Context?,
@@ -33,7 +37,16 @@ class VoucherAdapter(
 
     override fun onBindViewHolder(holder: VoucherViewHolder, position: Int) {
         val voucher = listVoucher!![position]
+        val expiredDateFormatted = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(voucher.expiredDate))
+        holder.tvVoucherDateExpired.text = "HSD: $expiredDateFormatted"
         holder.tvVoucherTitle.text = voucher.title
+
+        if (voucher.expiredDate < System.currentTimeMillis()) {
+            holder.imgStatus.visibility = View.GONE
+        } else {
+            holder.imgStatus.visibility = View.VISIBLE
+        }
+
         holder.tvVoucherMinimum.text = voucher.minimumText
         if (isEmpty(voucher.getCondition(amount))) {
             holder.tvVoucherCondition.visibility = View.GONE
@@ -41,45 +54,25 @@ class VoucherAdapter(
             holder.tvVoucherCondition.visibility = View.VISIBLE
             holder.tvVoucherCondition.text = voucher.getCondition(amount)
         }
-        if (voucher.isVoucherEnable(amount)) {
-            holder.imgStatus.visibility = View.VISIBLE
-            holder.tvVoucherTitle.setTextColor(
-                ContextCompat.getColor(
-                    context!!,
-                    R.color.textColorHeading
-                )
-            )
-            holder.tvVoucherMinimum.setTextColor(
-                ContextCompat.getColor(
-                    context!!,
-                    R.color.textColorSecondary
-                )
-            )
-        } else {
-            holder.imgStatus.visibility = View.GONE
-            holder.tvVoucherTitle.setTextColor(
-                ContextCompat.getColor(
-                    context!!,
-                    R.color.textColorAccent
-                )
-            )
-            holder.tvVoucherMinimum.setTextColor(
-                ContextCompat.getColor(
-                    context!!,
-                    R.color.textColorAccent
-                )
-            )
-        }
+
         if (voucher.isSelected) {
             holder.imgStatus.setImageResource(R.drawable.ic_item_selected)
         } else {
             holder.imgStatus.setImageResource(R.drawable.ic_item_unselect)
         }
+
+        // Set click listener
         holder.layoutItem.setOnClickListener {
-            if (!voucher.isVoucherEnable(amount)) return@setOnClickListener
-            iClickVoucherListener.onClickVoucherItem(voucher)
+            if (voucher.expiredDate < System.currentTimeMillis()) {
+                Toast.makeText(context, "Voucher đã hết hạn", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (voucher.isVoucherEnable(amount)) {
+                iClickVoucherListener.onClickVoucherItem(voucher)
+            }
         }
     }
+
 
     override fun getItemCount(): Int {
         return listVoucher?.size ?: 0
@@ -94,6 +87,7 @@ class VoucherAdapter(
         val tvVoucherTitle: TextView
         val tvVoucherMinimum: TextView
         val tvVoucherCondition: TextView
+        val tvVoucherDateExpired: TextView
         val layoutItem: LinearLayout
 
         init {
@@ -101,6 +95,7 @@ class VoucherAdapter(
             tvVoucherTitle = itemView.findViewById(R.id.tv_voucher_title)
             tvVoucherMinimum = itemView.findViewById(R.id.tv_voucher_minimum)
             tvVoucherCondition = itemView.findViewById(R.id.tv_voucher_condition)
+            tvVoucherDateExpired = itemView.findViewById(R.id.tv_voucher_date_expired)
             layoutItem = itemView.findViewById(R.id.layout_item)
         }
     }

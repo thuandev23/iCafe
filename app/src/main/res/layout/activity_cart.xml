@@ -71,53 +71,6 @@
                 android:layout_margin="@dimen/define_dimen_10">
 
                 <RelativeLayout
-                    android:id="@+id/layout_payment_method"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@+id/img_next_payment_method"
-                        android:layout_marginEnd="@dimen/define_dimen_10"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/textColorHeading"
-                            android:textSize="@dimen/text_size_small"
-                            android:textStyle="bold"
-                            android:text="@string/label_payment_method"/>
-
-                        <TextView
-                            android:id="@+id/tv_payment_method"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/textColorSecondary"
-                            android:textSize="@dimen/text_size_xsmall"
-                            android:layout_marginTop="@dimen/define_dimen_5"
-                            android:text="@string/label_no_payment_method"/>
-                    </LinearLayout>
-
-                    <ImageView
-                        android:id="@+id/img_next_payment_method"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_next_right"/>
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/define_dimen_10"
-                    android:layout_marginBottom="@dimen/define_dimen_10"
-                    android:background="@color/colorAccent"/>
-
-                <RelativeLayout
                     android:id="@+id/layout_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -348,6 +301,53 @@
                         android:text="- 0.000vnd"
                         android:src="@drawable/ic_item_unselect"/>
                 </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/define_dimen_10"
+                    android:layout_marginBottom="@dimen/define_dimen_10"
+                    android:background="@color/colorAccent"/>
+                <RelativeLayout
+                    android:id="@+id/layout_payment_method"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@+id/img_next_payment_method"
+                        android:layout_marginEnd="@dimen/define_dimen_10"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/textColorHeading"
+                            android:textSize="@dimen/text_size_small"
+                            android:textStyle="bold"
+                            android:text="@string/label_payment_method"/>
+
+                        <TextView
+                            android:id="@+id/tv_payment_method"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/textColorSecondary"
+                            android:textSize="@dimen/text_size_xsmall"
+                            android:layout_marginTop="@dimen/define_dimen_5"
+                            android:text="@string/label_no_payment_method"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/img_next_payment_method"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_next_right"/>
+                </RelativeLayout>
+
+
 
             </LinearLayout>
 

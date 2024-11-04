@@ -16,11 +16,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.pro.shopfee.MyApplication
 import com.pro.shopfee.R
@@ -34,6 +36,7 @@ import com.pro.shopfee.utils.GlobalFunction
 import com.pro.shopfee.utils.GlobalFunction.showToastMessage
 import com.pro.shopfee.utils.StringUtil.isEmpty
 import org.greenrobot.eventbus.EventBus
+import kotlin.math.*
 
 class AddressActivity : BaseActivity() {
 
@@ -129,11 +132,59 @@ class AddressActivity : BaseActivity() {
             listAddress = ArrayList()
         }
     }
+    private fun getAdminLocation(callback: (LatLng, String) -> Unit) {
+        val usersRef = FirebaseDatabase.getInstance().getReference("users")
+        usersRef.orderByChild("admin").equalTo(true)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (adminSnapshot in snapshot.children) {
+                        val latitude = adminSnapshot.child("latitude").getValue(Double::class.java)
+                        val longitude =
+                            adminSnapshot.child("longitude").getValue(Double::class.java)
+                        val address = adminSnapshot.child("address").getValue(String::class.java)
+                        if (latitude != null && longitude != null) {
+                            callback(LatLng(latitude, longitude), address ?: "")
+                            break
+                        }
+                    }
+                }
 
-    private fun handleClickAddress(address: Address, lat: Double, lng: Double) {
-        EventBus.getDefault().post(AddressSelectedEvent(address, lat, lng))
-        finish()
+                override fun onCancelled(error: DatabaseError) {
+                    // Xử lý lỗi nếu có
+                }
+            })
     }
+    private fun handleClickAddress(address: Address, lat: Double, lng: Double) {
+        getAdminLocation { adminLocation, adminAddress ->
+            val distance = calculateDistance(adminLocation.latitude, adminLocation.longitude, lat, lng)
+            if (distance > 20.0) {
+                showToastMessage(
+                    this,
+                    "Để đảm bảo đồ uống vẫn ngon như mới pha thì vui lòng khách hàng chọn địa chỉ trong bán kính 20km từ cửa hàng của chúng tôi"
+                )
+            } else {
+                // Nếu khoảng cách hợp lệ, tiếp tục chọn địa chỉ
+                EventBus.getDefault().post(AddressSelectedEvent(address, lat, lng))
+                finish()
+            }
+        }
+    }
+
+
+    private fun calculateDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val earthRadius = 6371.0 // Bán kính Trái đất tính theo km
+
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+
+        val a = sin(dLat / 2) * sin(dLat / 2) +
+                cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) *
+                sin(dLon / 2) * sin(dLon / 2)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        return earthRadius * c //km
+    }
+
     private fun initSwipeToDelete() {
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 

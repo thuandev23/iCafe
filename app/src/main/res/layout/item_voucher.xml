@@ -57,6 +57,14 @@
                 android:textSize="@dimen/text_size_xxsmall"
                 android:textColor="@color/red"
                 android:text="@string/app_name"/>
+            <TextView
+                android:id="@+id/tv_voucher_date_expired"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/define_dimen_2"
+                android:textSize="@dimen/text_size_xxsmall"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/app_name"/>
         </LinearLayout>
 
         <ImageView

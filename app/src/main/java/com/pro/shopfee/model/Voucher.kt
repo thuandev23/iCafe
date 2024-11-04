@@ -7,13 +7,17 @@ class Voucher : Serializable {
     var id: Long = 0
     var discount = 0
     var minimum = 0
+    var createdAt: Long = 0
+    var expiredDate: Long = 0
     var isSelected = false
 
     constructor()
-    constructor(id: Long, discount: Int, minimum: Int) {
+    constructor(id: Long, discount: Int, minimum: Int, expiredDate: Long, createdAt: Long) {
         this.id = id
         this.discount = discount
         this.minimum = minimum
+        this.expiredDate = expiredDate
+        this.createdAt = createdAt
     }
 
     val title: String

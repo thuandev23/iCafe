@@ -39,9 +39,8 @@ class PaymentMethodActivity : BaseActivity() {
         val linearLayoutManager = LinearLayoutManager(this)
         rcvPaymentMethod.layoutManager = linearLayoutManager
         listPaymentMethod = ArrayList()
-        paymentMethodAdapter = PaymentMethodAdapter(
-            listPaymentMethod,
-            object : IClickPaymentMethodListener {
+        paymentMethodAdapter =
+            PaymentMethodAdapter(listPaymentMethod, object : IClickPaymentMethodListener {
                 override fun onClickPaymentMethodItem(paymentMethod: PaymentMethod) {
                     handleClickPaymentMethod(
                         paymentMethod
@@ -63,26 +62,22 @@ class PaymentMethodActivity : BaseActivity() {
         resetListPaymentMethod()
         listPaymentMethod!!.add(
             PaymentMethod(
-                1,
-                "Thanh toán tiền mặt",
-                "(Thanh toán khi nhận hàng)"
+                1, "Thanh toán tiền mặt", "(Thanh toán khi nhận hàng)"
+            )
+        )
+        /*listPaymentMethod!!.add(
+            PaymentMethod(
+                2, "Credit or debit card", "(Thẻ Visa hoặc Mastercard)"
             )
         )
         listPaymentMethod!!.add(
             PaymentMethod(
-                2,
-                "Credit or debit card",
-                "(Thẻ Visa hoặc Mastercard)"
+                3, "Chuyển khoản ngân hàng", "(Cần xác nhận)"
             )
-        )
+        )*/
         listPaymentMethod!!.add(
-            PaymentMethod(
-                3,
-                "Chuyển khoản ngân hàng",
-                "(Tự động xác nhận)"
-            )
+            PaymentMethod(4, "ZaloPay", "(Cần xác nhận)")
         )
-        listPaymentMethod!!.add(PaymentMethod(4, "ZaloPay", "(Tự động xác nhận)"))
         if (paymentMethodSelectedId > 0 && listPaymentMethod != null) {
             for (paymentMethod in listPaymentMethod!!) {
                 if (paymentMethod.id == paymentMethodSelectedId) {

@@ -60,15 +60,15 @@
                 android:background="@color/bgFilter"
                 android:layout_marginTop="@dimen/define_dimen_16"
                 android:layout_marginBottom="@dimen/define_dimen_4"/>
-            <FrameLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="220dp">
                 <androidx.fragment.app.FragmentContainerView
                     class="com.google.android.gms.maps.SupportMapFragment"
                     android:id="@+id/map_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-            </FrameLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
