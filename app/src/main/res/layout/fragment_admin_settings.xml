@@ -55,6 +55,18 @@
         android:drawableStart="@drawable/ic_sign_out"
         android:drawablePadding="@dimen/define_dimen_10"
         android:textSize="@dimen/text_size_small" />
+    <TextView
+        android:id="@+id/tv_statistics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/define_dimen_14"
+        android:paddingBottom="@dimen/define_dimen_14"
+        android:text="@string/statistics_label"
+        android:drawableTint="@color/colorPrimaryDark"
+        android:textColor="@color/colorPrimaryDark"
+        android:drawableStart="@drawable/ic_sign_out"
+        android:drawablePadding="@dimen/define_dimen_10"
+        android:textSize="@dimen/text_size_small" />
 
     <TextView
         android:id="@+id/tv_manage_feedback"

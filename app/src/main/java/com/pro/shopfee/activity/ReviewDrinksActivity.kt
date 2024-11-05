@@ -65,7 +65,6 @@ class ReviewDrinksActivity : BaseActivity() {
             intent.getSerializableExtra(Constant.RATING_REVIEW_OBJECT) as? RatingReview
         drinkId = ratingReview?.id
 
-        // Check if drinkId is not null before proceeding
         drinkId?.let {
             val databaseReference = MyApplication[this].getRatingDrinkDatabaseReference(it)
             databaseReference?.addValueEventListener(object : ValueEventListener {
@@ -79,10 +78,10 @@ class ReviewDrinksActivity : BaseActivity() {
                     }
                     if (reviewsList.isNullOrEmpty()) {
                         findViewById<TextView>(R.id.tv_no_rating).visibility = android.view.View.VISIBLE
-                        findViewById<RecyclerView>(R.id.rcv_data).visibility = android.view.View.GONE
+                        findViewById<RecyclerView>(R.id.rcv_reviews).visibility = android.view.View.GONE
                     } else {
                         findViewById<TextView>(R.id.tv_no_rating).visibility = android.view.View.GONE
-                        findViewById<RecyclerView>(R.id.rcv_data).visibility = android.view.View.VISIBLE
+                        findViewById<RecyclerView>(R.id.rcv_reviews).visibility = android.view.View.VISIBLE
                     }
                     reviewsAdapter.notifyDataSetChanged()
                 }
@@ -105,4 +104,5 @@ class ReviewDrinksActivity : BaseActivity() {
                 .show()
         }
     }
+
 }

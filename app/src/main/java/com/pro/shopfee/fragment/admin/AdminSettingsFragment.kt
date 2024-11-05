@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.pro.shopfee.R
 import com.pro.shopfee.activity.LoginActivity
+import com.pro.shopfee.activity.PieChartActivity
 import com.pro.shopfee.activity.admin.AdminFeedbackActivity
 import com.pro.shopfee.activity.admin.AdminToppingActivity
 import com.pro.shopfee.activity.admin.AdminVoucherActivity
@@ -36,6 +37,8 @@ class AdminSettingsFragment : Fragment() {
             .setOnClickListener { onClickManageProductColor() }
         mView!!.findViewById<View>(R.id.tv_manage_voucher)
             .setOnClickListener { onClickManageVoucher() }
+        mView!!.findViewById<View>(R.id.tv_statistics)
+            .setOnClickListener { onClickStatistics() }
         mView!!.findViewById<View>(R.id.tv_manage_feedback)
             .setOnClickListener { onClickManageFeedback() }
         mView!!.findViewById<View>(R.id.tv_sign_out)
@@ -43,22 +46,25 @@ class AdminSettingsFragment : Fragment() {
     }
 
     private fun onClickManageProductColor() {
-        startActivity(activity!!, AdminToppingActivity::class.java)
+        startActivity(requireActivity(), AdminToppingActivity::class.java)
     }
 
     private fun onClickManageVoucher() {
-        startActivity(activity!!, AdminVoucherActivity::class.java)
+        startActivity(requireActivity(), AdminVoucherActivity::class.java)
     }
 
     private fun onClickManageFeedback() {
-        startActivity(activity!!, AdminFeedbackActivity::class.java)
+        startActivity(requireActivity(), AdminFeedbackActivity::class.java)
+    }
+    private fun onClickStatistics() {
+        startActivity(requireActivity(), PieChartActivity::class.java)
     }
 
     private fun onClickSignOut() {
         if (activity == null) return
         FirebaseAuth.getInstance().signOut()
         user = null
-        startActivity(activity!!, LoginActivity::class.java)
-        activity!!.finishAffinity()
+        startActivity(requireActivity(), LoginActivity::class.java)
+        requireActivity().finishAffinity()
     }
 }

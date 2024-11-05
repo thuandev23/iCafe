@@ -36,7 +36,7 @@ class ReviewsDrinkAdapter(private val listReviewsDrink: List<Rating>?) :
     class ReviewsDrinkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgUser: ImageView = itemView.findViewById(R.id.img_reviewer_type)
         val tvName: TextView = itemView.findViewById(R.id.tv_reviewer_title)
-        val ratingBar: RatingBar = itemView.findViewById(R.id.ratingbar) // Corrected to RatingBar
+        val ratingBar: RatingBar = itemView.findViewById(R.id.ratingbar)
         val tvReviews: TextView = itemView.findViewById(R.id.tv_reviewer_condition)
     }
 }
