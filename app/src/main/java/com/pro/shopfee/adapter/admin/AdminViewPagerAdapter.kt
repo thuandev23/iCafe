@@ -6,6 +6,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.pro.shopfee.fragment.admin.AdminCategoryFragment
 import com.pro.shopfee.fragment.admin.AdminDrinkFragment
 import com.pro.shopfee.fragment.admin.AdminOrderFragment
+import com.pro.shopfee.fragment.admin.AdminOrderWebsiteFragment
 import com.pro.shopfee.fragment.admin.AdminSettingsFragment
 
 class AdminViewPagerAdapter(fragmentActivity: FragmentActivity) :
@@ -14,12 +15,13 @@ class AdminViewPagerAdapter(fragmentActivity: FragmentActivity) :
         return when (position) {
             1 -> AdminDrinkFragment()
             2 -> AdminOrderFragment()
-            3 -> AdminSettingsFragment()
+            3 -> AdminOrderWebsiteFragment()
+            4 -> AdminSettingsFragment()
             else -> AdminCategoryFragment()
         }
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return 5
     }
 }

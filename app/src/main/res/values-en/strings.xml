@@ -170,7 +170,8 @@
     <string name="label_category">Category</string>
     <string name="label_category_require">Category (*)</string>
     <string name="label_drink">Drink</string>
-    <string name="label_order">Order</string>
+    <string name="label_order">Order_A</string>
+    <string name="label_order_w">Order_W</string>
     <string name="label_settings">Settings</string>
     <string name="label_featured">Featured:</string>
     <string name="featured">Featured</string>
@@ -314,7 +315,20 @@
     <string name="start_typing">Start typing...</string>
     <string name="no_data">No data</string>
     <string name="done">Done</string>
-    <string name="vui_l_ng_ch_n_a_ch_giao_h_ng_tr_c_khi_ch_n_ph_ng_th_c_thanh_to_n">Vui lòng chọn địa chỉ giao hàng trước khi chọn phương thức thanh toán</string>
-    <string name="statistics_label">Thống kê số lượng đơn hàng</string>
-    <string name="statistic">Thống kê đơn hàng</string>
+    <string name="vui_l_ng_ch_n_a_ch_giao_h_ng_tr_c_khi_ch_n_ph_ng_th_c_thanh_to_n">Please select the delivery address before selecting the payment method</string>
+    <string name="statistics_label">Statistics quantity of orders</string>
+    <string name="statistic">Statistics of orders</string>
+    <string name="anotherpaymentmethod">Select other methods</string>
+    <string name="top_san_pham_ban_chay">Top best -selling products</string>
+    <string name="thong_ke_don_hang">Statistics of orders</string>
+    <string name="table">Table: %1$s - %2$s</string>
+    <string name="gia">Price: %1$s</string>
+    <string name="khachhang">Customer: %1$s</string>
+    <string name="soluong">Quantity: %1$s</string>
+    <string name="chitiet">Detail</string>
+    <string name="hoanthanh">Completed</string>
+    <string name="process">Processing</string>
+    <string name="dathanhtoan">Paided</string>
+    <string name="chuathanhtoan">Unpaid</string>
+    <string name="soluong1">%1$s - Quantity: %2$s</string>
 </resources>

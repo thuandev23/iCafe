@@ -38,8 +38,9 @@ class AdminMainActivity : BaseActivity() {
                 when (position) {
                     0 -> bottomNavigation!!.menu.findItem(R.id.nav_category).isChecked = true
                     1 -> bottomNavigation!!.menu.findItem(R.id.nav_drink).isChecked = true
-                    2 -> bottomNavigation!!.menu.findItem(R.id.nav_order).isChecked = true
-                    3 -> bottomNavigation!!.menu.findItem(R.id.nav_settings).isChecked = true
+                    2 -> bottomNavigation!!.menu.findItem(R.id.nav_order_app).isChecked = true
+                    3 -> bottomNavigation!!.menu.findItem(R.id.nav_order_web).isChecked = true
+                    4 -> bottomNavigation!!.menu.findItem(R.id.nav_settings).isChecked = true
                 }
             }
         })
@@ -51,11 +52,14 @@ class AdminMainActivity : BaseActivity() {
                 R.id.nav_drink -> {
                     viewPager2!!.currentItem = 1
                 }
-                R.id.nav_order -> {
+                R.id.nav_order_app -> {
                     viewPager2!!.currentItem = 2
                 }
-                R.id.nav_settings -> {
+                R.id.nav_order_web -> {
                     viewPager2!!.currentItem = 3
+                }
+                R.id.nav_settings -> {
+                    viewPager2!!.currentItem = 4
                 }
             }
             true

@@ -162,6 +162,8 @@
     <string name="label_category_require">カテゴリー (*)</string>
     <string name="label_drink">飲み物</string>
     <string name="label_order">注文</string>
+    <string name="label_order_w">Order_W</string>
+
     <string name="label_settings">設定</string>
     <string name="label_featured">注目:</string>
     <string name="featured">注目</string>
@@ -306,8 +308,22 @@
     <string name="start_typing">入力を開始...</string>
     <string name="no_data">データがありません</string>
     <string name="done">完了</string>
-    <string name="vui_l_ng_ch_n_a_ch_giao_h_ng_tr_c_khi_ch_n_ph_ng_th_c_thanh_to_n">Vui lòng chọn địa chỉ giao hàng trước khi chọn phương thức thanh toán</string>
-    <string name="statistics_label">Thống kê số lượng đơn hàng</string>
-    <string name="statistic">Thống kê đơn hàng</string>
+    <string name="vui_l_ng_ch_n_a_ch_giao_h_ng_tr_c_khi_ch_n_ph_ng_th_c_thanh_to_n">お支払い方法を選択する前に配送先住所を選択してください</string>
+    <string name="statistics_label">注文数統計</string>
+    <string name="statistic">注文統計</string>
+    <string name="anotherpaymentmethod">別の支払い方法を選択</string>
+    <string name="top_san_pham_ban_chay">ベストセラー製品トップ</string>
+    <string name="thong_ke_don_hang">注文統計</string>
+    <string name="table">テーブル: %1$s - %2$s</string>
+    <string name="gia">価格: %1$s</string>
+    <string name="khachhang">顧客: %1$s</string>
+    <string name="soluong">商品数: %1$s</string>
+    <string name="chitiet">詳細</string>
+    <string name="hoanthanh">完了</string>
+    <string name="process">準備中</string>
+    <string name="dathanhtoan">支払い済み</string>
+    <string name="chuathanhtoan">未払い</string>
+    <string name="soluong1">%1$s - 数量: %2$s</string>
+
 
 </resources>

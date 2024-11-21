@@ -12,10 +12,13 @@
         android:title="@string/label_drink" />
 
     <item
-        android:id="@+id/nav_order"
-        android:icon="@drawable/ic_nav_order"
+        android:id="@+id/nav_order_app"
+        android:icon="@drawable/ic_nav_phone"
         android:title="@string/label_order" />
-
+    <item
+        android:id="@+id/nav_order_web"
+        android:icon="@drawable/ic_nav_web"
+        android:title="@string/label_order_w" />
     <item
         android:id="@+id/nav_settings"
         android:icon="@drawable/ic_nav_setting"

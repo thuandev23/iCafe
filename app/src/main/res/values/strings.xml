@@ -160,7 +160,8 @@
     <string name="label_category">Thể loại</string>
     <string name="label_category_require">Thể loại (*)</string>
     <string name="label_drink">Đồ uống</string>
-    <string name="label_order">Đơn hàng</string>
+    <string name="label_order">Đơn hàng App</string>
+    <string name="label_order_w">Đơn hàng Web</string>
     <string name="label_settings">Cài đặt</string>
     <string name="label_featured">Nổi bật:</string>
     <string name="featured">Nổi bật</string>
@@ -308,6 +309,20 @@
     <string name="done">Xong</string>
     <string name="vui_l_ng_ch_n_a_ch_giao_h_ng_tr_c_khi_ch_n_ph_ng_th_c_thanh_to_n">Vui lòng chọn địa chỉ giao hàng trước khi chọn phương thức thanh toán</string>
     <string name="statistics_label">Thống kê số lượng đơn hàng</string>
-    <string name="statistic">Thống kê đơn hàng</string>
+    <string name="statistic">Thống kê </string>
+    <string name="anotherpaymentmethod">Chọn phương thức khác</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="top_san_pham_ban_chay">Top sản phẩm bán chạy nhất</string>
+    <string name="thong_ke_don_hang">Thống kê đơn hàng</string>
+    <string name="table">Bàn: %1$s - %2$s</string>
+    <string name="gia">Giá: %1$s</string>
+    <string name="khachhang">Khách hàng: %1$s</string>
+    <string name="soluong">Số sản phẩm: %1$s</string>
+    <string name="chitiet">Chi tiết</string>
+    <string name="hoanthanh">Hoàn thành</string>
+    <string name="process">Đang chuẩn bị</string>
+    <string name="dathanhtoan">Đã thanh toán</string>
+    <string name="chuathanhtoan">Chưa thanh toán</string>
+    <string name="soluong1">%1$s - Số lượng: %2$s</string>
 
 </resources>

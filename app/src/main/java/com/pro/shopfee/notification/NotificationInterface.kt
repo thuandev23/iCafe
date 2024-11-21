@@ -7,7 +7,6 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface NotificationInterface {
-
     @POST("v1/projects/cafem-80e6f/messages:send")
     @Headers(
         "Content-Type: application/json",

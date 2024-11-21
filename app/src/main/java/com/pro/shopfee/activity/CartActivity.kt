@@ -62,7 +62,7 @@ class CartActivity : BaseActivity() {
     private var tvAmount: TextView? = null
     private var tvPriceVoucher: TextView? = null
     private var tvCheckout: TextView? = null
-    private var listDrinkCart: MutableList<Drink>? = null
+    private var listDrinkCart: MutableList<Drink>? = null   
     private var cartAdapter: CartAdapter? = null
     private var priceDrink = 0
     private var mAmount = 0
@@ -248,12 +248,12 @@ class CartActivity : BaseActivity() {
                             AlertDialog.Builder(this@CartActivity).setTitle("Payment Fail")
                                 .setMessage(
                                     java.lang.String.format(
-                                        "ZaloPayErrorCode: %s \nTransToken: %s",
+                                        "ZaloPay Error: %s \nTransToken: %s",
                                         zaloPayError.toString(),
                                         zpTransToken
                                     )
                                 ).setPositiveButton("OK") { dialog, which -> }
-                                .setNegativeButton("Cancel", null).show()
+                                .setNegativeButton(getString(R.string.anotherpaymentmethod), null).show()
 
                         }
 

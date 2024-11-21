@@ -168,7 +168,6 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/define_dimen_10"
-                        android:layout_toStartOf="@+id/tv_voucher"
                         android:text="@string/delivery"
                         android:textColor="@color/textColorHeading"
                         android:textSize="@dimen/text_size_small" />
