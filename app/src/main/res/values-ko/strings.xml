@@ -325,6 +325,7 @@
     <string name="dathanhtoan">결제 완료</string>
     <string name="chuathanhtoan">미결제</string>
     <string name="soluong1">%1$s - 수량: %2$s</string>
+    <string name="doanh_thu_vnd">수익: %1$s VND</string>
 
 
 </resources>

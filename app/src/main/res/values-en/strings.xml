@@ -331,4 +331,5 @@
     <string name="dathanhtoan">Paided</string>
     <string name="chuathanhtoan">Unpaid</string>
     <string name="soluong1">%1$s - Quantity: %2$s</string>
+    <string name="doanh_thu_vnd">Revenue: %1$s VND</string>
 </resources>

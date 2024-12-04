@@ -92,9 +92,15 @@ class RatingReviewActivity : BaseActivity() {
             val review = edtReview!!.text.toString().trim { it <= ' ' }
             val rating = Rating(userId, userName, userImage, review, rate.toString().toDouble())
             if (RatingReview.TYPE_RATING_REVIEW_DRINK == ratingReview!!.type) {
-                sendRatingDrink(rating)
+                //sendRatingDrink(rating)
+                showToastMessage(getString(R.string.msg_send_review_success))
+                ratingBar!!.rating = 5f
+                edtReview!!.setText("")
             } else if (RatingReview.TYPE_RATING_REVIEW_ORDER == ratingReview!!.type) {
-                sendRatingOrder(rating)
+                //sendRatingOrder(rating)
+                showToastMessage(getString(R.string.msg_send_review_success))
+                ratingBar!!.rating = 5f
+                edtReview!!.setText("")
             }
         }
     }

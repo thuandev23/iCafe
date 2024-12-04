@@ -44,9 +44,9 @@ class PieChartActivity : BaseActivity() {
     private lateinit var barChart: BarChart
     private var countStatus4 = 0
     private var countStatus5 = 0
-    private var totalStatus4 = 0.0
-    private var totalStatus5 = 0.0
-    private var totalRevenue = 0.0
+    private var totalStatus4 = 0
+    private var totalStatus5 = 0
+    private var totalRevenue = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,7 +76,7 @@ class PieChartActivity : BaseActivity() {
                 barChart.visibility = View.GONE
             }
         }
-        getRevenue()
+        getTotalRevenueCombined()
         loadStatisticsOrders()
         loadStatisticsDrinks()
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
@@ -87,6 +87,7 @@ class PieChartActivity : BaseActivity() {
             exportOrderDataToExcel()
         }
     }
+
     private fun initToolbar() {
         val imgToolbarBack = findViewById<ImageView>(R.id.img_toolbar_back)
         val tvToolbarTitle = findViewById<TextView>(R.id.tv_toolbar_title)
@@ -102,14 +103,16 @@ class PieChartActivity : BaseActivity() {
                 resetCounters()
                 if (snapshot.exists()) {
                     for (orderSnapshot in snapshot.children) {
-                        val status = orderSnapshot.child("status").getValue(Int::class.java) ?: continue
-                        val total = orderSnapshot.child("total").getValue(Double::class.java) ?: 0.0
+                        val status =
+                            orderSnapshot.child("status").getValue(Int::class.java) ?: continue
+                        val total = orderSnapshot.child("total").getValue(Int::class.java) ?: 0
 
                         when (status) {
                             4 -> {
                                 countStatus4++
                                 totalStatus4 += total
                             }
+
                             5 -> {
                                 countStatus5++
                                 totalStatus5 += total
@@ -119,6 +122,7 @@ class PieChartActivity : BaseActivity() {
                     setupPieChart()
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {
                 Log.d("Statistics", error.message)
             }
@@ -126,58 +130,109 @@ class PieChartActivity : BaseActivity() {
     }
 
     private fun loadStatisticsDrinks() {
-        val ref = FirebaseDatabase.getInstance().getReference("drink")
-        // get 5 drinks with the highest sales
-        ref.orderByChild("sale").limitToLast(5).addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val list = mutableListOf<String>()
-                val listSales = mutableListOf<Int>()
-                if (snapshot.exists()) {
-                    for (drinkSnapshot in snapshot.children) {
-                        val name = drinkSnapshot.child("name").getValue(String::class.java) ?: ""
-                        val sales = drinkSnapshot.child("sale").getValue(Int::class.java) ?: 0
-                        list.add(name)
-                        listSales.add(sales)
-                    }
-                    setupBarChart(list, listSales)
-                }
-            }
-            override fun onCancelled(error: DatabaseError) {
-                Log.d("Statistics", error.message)
-            }
-        })
-    }
+        val combinedDrinkSaleMap = mutableMapOf<String, Int>()
 
-    private fun getRevenue() {
-        val ref = FirebaseDatabase.getInstance().getReference("order")
-        ref.addValueEventListener(object : ValueEventListener {
+        val refApp = FirebaseDatabase.getInstance().getReference("order")
+        val refWeb = FirebaseDatabase.getInstance().getReference("ordersweb")
+
+        val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                totalRevenue = 0.0 // Reset revenue before calculating
                 if (snapshot.exists()) {
                     for (orderSnapshot in snapshot.children) {
-                        val status = orderSnapshot.child("status").getValue(Int::class.java) ?: continue
-                        val total = orderSnapshot.child("total").getValue(Double::class.java) ?: 0.0
+                        val drinksKey = if (snapshot.ref.key == "order") "drinks" else "cart"
+                        val nameKey = "name"
+                        val countKey = if (drinksKey == "drinks") "count" else "quantity"
 
-                        if (status == 3) {
-                            totalRevenue += total
+                        val drinks = orderSnapshot.child(drinksKey)
+                        for (drinkSnapshot in drinks.children) {
+                            val drinkName = drinkSnapshot.child(nameKey).getValue(String::class.java) ?: ""
+                            val drinkCount = drinkSnapshot.child(countKey).getValue(Int::class.java) ?: 0
+                            combinedDrinkSaleMap[drinkName] = (combinedDrinkSaleMap[drinkName] ?: 0) + drinkCount
                         }
                     }
                 }
-                val tvRevenue = findViewById<TextView>(R.id.tv_title_revenue)
-                tvRevenue.text = "Doanh thu: ${totalRevenue} VND"
+
+                // Check if data from both references is complete
+                if (snapshot.ref.key == "ordersweb") {
+                    // Sort and take top 5 after both listeners complete
+                    val sortedDrinks = combinedDrinkSaleMap.toList().sortedByDescending { (_, value) -> value }.toMap()
+                    val top5Drinks = sortedDrinks.keys.take(5)
+                    val top5Sales = sortedDrinks.values.take(5)
+                    setupBarChart(top5Drinks.toList(), top5Sales.toList())
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.d("Statistics", error.message)
             }
-        })
+        }
+
+        // Attach listeners to both Firebase references
+        refApp.addListenerForSingleValueEvent(listener)
+        refWeb.addListenerForSingleValueEvent(listener)
+    }
+
+    private fun getTotalRevenueCombined() {
+        val refApp = FirebaseDatabase.getInstance().getReference("order")
+        val refWeb = FirebaseDatabase.getInstance().getReference("ordersweb")
+        var revenueApp = 0
+        var revenueWeb = 0
+
+        val listenerApp = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                revenueApp = 0
+                if (snapshot.exists()) {
+                    for (orderSnapshot in snapshot.children) {
+                        val status = orderSnapshot.child("status").getValue(Int::class.java) ?: continue
+                        val total = orderSnapshot.child("total").getValue(Int::class.java) ?: 0
+                        if (status == 4) {
+                            revenueApp += total*1000
+                        }
+                    }
+                }
+                updateTotalRevenue(revenueApp, revenueWeb)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("Statistics", error.message)
+            }
+        }
+
+        val listenerWeb = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                revenueWeb = 0
+                if (snapshot.exists()) {
+                    for (orderSnapshot in snapshot.children) {
+                        val status = orderSnapshot.child("statusOrder").getValue(Boolean::class.java) ?: continue
+                        val total = orderSnapshot.child("total").getValue(Int::class.java) ?: 0
+                        if (status) {
+                            revenueWeb += total
+                        }
+                    }
+                }
+                updateTotalRevenue(revenueApp, revenueWeb)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("Statistics", error.message)
+            }
+        }
+
+        refApp.addListenerForSingleValueEvent(listenerApp)
+        refWeb.addListenerForSingleValueEvent(listenerWeb)
+    }
+
+    private fun updateTotalRevenue(revenueApp: Int, revenueWeb: Int) {
+        val totalRevenue = revenueApp + revenueWeb
+        val tvRevenue = findViewById<TextView>(R.id.tv_title_revenue)
+        tvRevenue.text = getString(R.string.doanh_thu_vnd, totalRevenue.toString())
     }
 
     private fun resetCounters() {
         countStatus4 = 0
         countStatus5 = 0
-        totalStatus4 = 0.0
-        totalStatus5 = 0.0
+        totalStatus4 = 0
+        totalStatus5 = 0
     }
 
     private fun setupPieChart() {
@@ -187,10 +242,9 @@ class PieChartActivity : BaseActivity() {
         )
 
         val dataSet = PieDataSet(entries, "Order Status")
-        dataSet.colors =
-            ColorTemplate.createColors(
-                intArrayOf(Color.rgb(88, 214, 141), Color.rgb(174, 182, 191))
-            )
+        dataSet.colors = ColorTemplate.createColors(
+            intArrayOf(Color.rgb(88, 214, 141), Color.rgb(174, 182, 191))
+        )
         dataSet.valueTextColor = Color.WHITE
         dataSet.valueTextSize = 20f
 
@@ -227,19 +281,32 @@ class PieChartActivity : BaseActivity() {
     }
 
     private fun checkStoragePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                1
+            )
         } else {
             exportOrderDataToExcel()
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             exportOrderDataToExcel()
         } else {
-            Toast.makeText(this, "Permission denied to write external storage", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Permission denied to write external storage", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -265,10 +332,16 @@ class PieChartActivity : BaseActivity() {
                 var rowIndex = 1
                 for (orderSnapshot in snapshot.children) {
                     val orderId = orderSnapshot.key ?: "Unknown"
-                    val orderDate = orderSnapshot.child("dateTime").getValue(String::class.java) ?: "Unknown"
-                    val customerName = orderSnapshot.child("userEmail").getValue(String::class.java) ?: "Unknown"
-                    val address = orderSnapshot.child("address").child("address").getValue(String::class.java) ?: "Unknown"
-                    val phoneNumber = orderSnapshot.child("address").child("phone").getValue(String::class.java) ?: "Unknown"
+                    val orderDate =
+                        orderSnapshot.child("dateTime").getValue(String::class.java) ?: "Unknown"
+                    val customerName =
+                        orderSnapshot.child("userEmail").getValue(String::class.java) ?: "Unknown"
+                    val address =
+                        orderSnapshot.child("address").child("address").getValue(String::class.java)
+                            ?: "Unknown"
+                    val phoneNumber =
+                        orderSnapshot.child("address").child("phone").getValue(String::class.java)
+                            ?: "Unknown"
                     val drinks = orderSnapshot.child("drinks").children.joinToString(", ") {
                         val name = it.child("name").getValue(String::class.java) ?: "Unknown Drink"
                         val quantity = it.child("count").getValue(Int::class.java) ?: 0
@@ -284,7 +357,9 @@ class PieChartActivity : BaseActivity() {
                         5 -> "Cancelled"
                         else -> "Unknown"
                     }
-                    val paymentMethod = orderSnapshot.child("paymentMethod").getValue(String::class.java) ?: "Unknown"
+                    val paymentMethod =
+                        orderSnapshot.child("paymentMethod").getValue(String::class.java)
+                            ?: "Unknown"
                     val total = orderSnapshot.child("total").getValue(Double::class.java) ?: 0.0
 
                     // Create a new row in the sheet for each order
@@ -302,39 +377,61 @@ class PieChartActivity : BaseActivity() {
 
                 try {
                     val fileName = "iCafe_ThongKeDonHang.xlsx"
-                    val file:File?
+                    val file: File?
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         // Sử dụng MediaStore để lưu file vào Downloads trên Android 10 trở lên
                         val contentValues = ContentValues().apply {
                             put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                            put(MediaStore.MediaColumns.MIME_TYPE, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-                            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                            put(
+                                MediaStore.MediaColumns.MIME_TYPE,
+                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                            )
+                            put(
+                                MediaStore.MediaColumns.RELATIVE_PATH,
+                                Environment.DIRECTORY_DOWNLOADS
+                            )
                         }
 
-                        val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+                        val uri = contentResolver.insert(
+                            MediaStore.Files.getContentUri("external"),
+                            contentValues
+                        )
                         if (uri != null) {
                             contentResolver.openOutputStream(uri).use { outputStream ->
                                 workbook.write(outputStream)
-                                Toast.makeText(this@PieChartActivity, "Data exported to Downloads", Toast.LENGTH_LONG).show()
+                                Toast.makeText(
+                                    this@PieChartActivity,
+                                    "Data exported to Downloads",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
-                            file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName)
+                            file = File(
+                                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                                fileName
+                            )
                             openFile(file)
                         }
                     } else {
                         // Android 9 trở xuống: sử dụng phương pháp truyền thống
-                        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                        val downloadsDir =
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                         val file = File(downloadsDir, fileName)
                         val fileOutputStream = FileOutputStream(file)
                         workbook.write(fileOutputStream)
                         fileOutputStream.close()
                         openFile(file)
-                        Toast.makeText(this@PieChartActivity, "Data exported to ${file.absolutePath}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this@PieChartActivity,
+                            "Data exported to ${file.absolutePath}",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
 
                     workbook.close()
                 } catch (e: IOException) {
                     e.printStackTrace()
-                    Toast.makeText(this@PieChartActivity, "Error saving file", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PieChartActivity, "Error saving file", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
 
@@ -356,5 +453,5 @@ class PieChartActivity : BaseActivity() {
             Toast.makeText(this, "No app available to open this file", Toast.LENGTH_SHORT).show()
         }
     }
-   }
+}
 

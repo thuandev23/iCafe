@@ -1,6 +1,10 @@
 package com.pro.shopfee.adapter.admin
 
 import android.content.Context
+import android.graphics.Color
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,17 +94,39 @@ class OrderWebAdapter(
                 context.getString(R.string.soluong1, drink.name, drink.quantity.toString())
             }
 
-            val orderDetails = """
-        |Tên người đặt: ${order.name}
-        |Số điện thoại: ${order.phone}
-        |Thanh toán: ${order.statusPayment.let { if (it) "Đã thanh toán" else "Chưa thanh toán" }}
-        |Thời gian: ${DateTimeUtils.convertTimeStampToDate(order.timestamp)}
-        |
-        |Chi tiết đồ uống:
-        |$drinkDetails
-    """.trimMargin()
+            val spannable = SpannableStringBuilder()
+
+            spannable.append("Tên người đặt: ")
+            spannable.append(order.name, ForegroundColorSpan(Color.BLACK), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannable.append("\n")
+
+            spannable.append("Số điện thoại: ")
+            spannable.append(order.phone, ForegroundColorSpan(Color.BLACK), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannable.append("\n")
+
+            spannable.append("Thanh toán: ")
+            val paymentStatusColor = if (order.statusPayment) Color.GREEN else Color.RED
+            spannable.append(
+                if (order.statusPayment) "Đã thanh toán" else "Chưa thanh toán",
+                ForegroundColorSpan(paymentStatusColor),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            spannable.append("\n")
+
+            spannable.append("Thời gian: ")
+            spannable.append(
+                DateTimeUtils.convertTimeStampToDate(order.timestamp),
+                ForegroundColorSpan(Color.BLACK),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            spannable.append("\n\n")
+            spannable.append("Chi tiết đồ uống:\n")
+            spannable.append(drinkDetails, ForegroundColorSpan(Color.DKGRAY), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+
+
             val dialog = androidx.appcompat.app.AlertDialog.Builder(view.context)
-                .setTitle("Thông tin bàn số: ${order.tableNumber}").setMessage(orderDetails)
+                .setTitle("Thông tin bàn số: ${order.tableNumber}").setMessage(spannable)
                 .setPositiveButton("Đóng") { dialogInterface, _ ->
                     dialogInterface.dismiss()
                 }.setNegativeButton("Đã làm xong") { dialogInterface, _ ->
@@ -132,8 +158,7 @@ class OrderWebAdapter(
                     view.context, "Đơn hàng đã ở trạng thái hoàn thành.", Toast.LENGTH_SHORT
                 ).show()
             }
-        }
-    }
+        }}
 
     private fun formatPrice(price: Int): String {
         val formatter = DecimalFormat("#,###,###")

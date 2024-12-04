@@ -324,5 +324,6 @@
     <string name="dathanhtoan">Đã thanh toán</string>
     <string name="chuathanhtoan">Chưa thanh toán</string>
     <string name="soluong1">%1$s - Số lượng: %2$s</string>
+    <string name="doanh_thu_vnd">Doanh thu: %1$s VND</string>
 
 </resources>
