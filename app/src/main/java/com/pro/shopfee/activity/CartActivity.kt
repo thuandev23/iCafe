@@ -200,7 +200,7 @@ class CartActivity : BaseActivity() {
         // tao order
         val orderApi = CreateOrder()
         try {
-            val data: JSONObject? = orderApi.createOrder("$total")
+            val data: JSONObject? = orderApi.createOrder("${total*1000}")
             Log.d("Amount", data.toString())
             //lblZpTransToken.setVisibility(View.VISIBLE) // loading on UI
             val code = data?.getString("return_code")

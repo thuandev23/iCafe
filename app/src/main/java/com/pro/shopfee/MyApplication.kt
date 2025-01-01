@@ -19,12 +19,15 @@ class MyApplication : Application() {
         DataStoreManager.init(applicationContext)
         FirebaseMessaging.getInstance().subscribeToTopic("test")
     }
+
     fun getUserDatabaseReference(): DatabaseReference? {
         return mFirebaseDatabase?.getReference("users")
     }
+
     fun getVoucherDatabaseReference(): DatabaseReference? {
         return mFirebaseDatabase?.getReference("voucher")
     }
+
     fun getAddressDatabaseReference(): DatabaseReference? {
         return mFirebaseDatabase?.getReference("address")
     }
@@ -60,11 +63,14 @@ class MyApplication : Application() {
     fun getOrderDetailDatabaseReference(orderId: Long): DatabaseReference? {
         return mFirebaseDatabase?.getReference("order/$orderId")
     }
+
     fun getNotificationDatabaseReference(): DatabaseReference? {
         return mFirebaseDatabase?.getReference("notifications")
     }
+
     companion object {
         private const val FIREBASE_URL = "https://cafem-80e6f-default-rtdb.firebaseio.com"
+
         @JvmStatic
         operator fun get(context: Context): MyApplication {
             return context.applicationContext as MyApplication
